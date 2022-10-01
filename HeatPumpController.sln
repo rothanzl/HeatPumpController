@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatPumpController", "HeatPumpController\HeatPumpController.csproj", "{8D97354A-68AE-4E3D-B253-7A966FA08F17}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatPumpController", "HeatPumpController\HeatPumpController.csproj", "{97D78897-030E-4D11-BDB1-4E249751816E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeatPumpController.Controller.Svc", "HeatPumpController.Controller.Svc\HeatPumpController.Controller.Svc.csproj", "{431D1E94-6459-436F-9D22-E9ADDDC9AA56}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +10,13 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8D97354A-68AE-4E3D-B253-7A966FA08F17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D97354A-68AE-4E3D-B253-7A966FA08F17}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D97354A-68AE-4E3D-B253-7A966FA08F17}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D97354A-68AE-4E3D-B253-7A966FA08F17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97D78897-030E-4D11-BDB1-4E249751816E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97D78897-030E-4D11-BDB1-4E249751816E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97D78897-030E-4D11-BDB1-4E249751816E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97D78897-030E-4D11-BDB1-4E249751816E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{431D1E94-6459-436F-9D22-E9ADDDC9AA56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{431D1E94-6459-436F-9D22-E9ADDDC9AA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{431D1E94-6459-436F-9D22-E9ADDDC9AA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{431D1E94-6459-436F-9D22-E9ADDDC9AA56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,3 +1,8 @@
-﻿// See https://aka.ms/new-console-template for more information
+using HeatPumpController.Controller.Svc;
 
-Console.WriteLine("Hello, World!");
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.RegisterControllerSvc();
+
+var app = builder.Build();
+app.MapGet("/", () => "Hello World!");
+app.Run();
