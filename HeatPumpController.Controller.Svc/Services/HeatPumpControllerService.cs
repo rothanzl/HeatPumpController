@@ -11,26 +11,33 @@ public class HeatPumpControllerService : IHostedService
     private Task? _loopTask;
     private readonly IServiceLoopIteration _serviceLoopIteration;
     private readonly ILogger<HeatPumpControllerService> _logger;
+    private readonly CancellationTokenSource _cts;
 
 
     public HeatPumpControllerService(IServiceLoopIteration serviceLoopIteration, ILogger<HeatPumpControllerService> logger)
     {
         _serviceLoopIteration = serviceLoopIteration;
         _logger = logger;
+
+        _cts = new CancellationTokenSource();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _loopTask = ServiceLoop(cancellationToken);
+        _loopTask = ServiceLoop(_cts.Token);
         return Task.CompletedTask;
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
+        _cts.Cancel();
+        
         while (_loopTask is { IsCompleted: false })
         {
             await Task.Delay(100);
         }
+        
+        _logger.LogInformation("Service stopped");
     }
 
     private async Task ServiceLoop(CancellationToken ct)
@@ -40,6 +47,10 @@ public class HeatPumpControllerService : IHostedService
             try
             {
                 await _serviceLoopIteration.Run(ct);
+            }
+            catch (TaskCanceledException)
+            {
+                _logger.LogInformation("Service cancelled");
             }
             catch (Exception e)
             {
