@@ -1,4 +1,4 @@
-using HeatPumpController.Controller.Svc.Models;
+using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Services;
 using HeatPumpController.Controller.Svc.Technology;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +12,7 @@ public static class ServiceDiRegister
         services.AddSingleton<ITechnologyController, DemoTechnologyController>();
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
         services.AddSingleton(typeof(IPersistentContext<>), typeof(PersistentContext<>));
+        services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
         
         services.AddHostedService<HeatPumpControllerService>();
         

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using HeatPumpController.Controller.Svc.Models;
+using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Technology;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -68,15 +69,12 @@ public interface IServiceLoopIteration
 public class ServiceLoopIteration : IServiceLoopIteration
 {
     private readonly ITechnologyController _technologyController;
-    private readonly IPersistentContext<SystemState> _persistention;
+    private readonly IPersistentStateMediator _stateMediator;
 
-    private SystemState SystemState => _persistention.State;
-
-    public ServiceLoopIteration(ITechnologyController technologyController, 
-        IPersistentContext<SystemState> persistention)
+    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator)
     {
         _technologyController = technologyController;
-        _persistention = persistention;
+        _stateMediator = stateMediator;
     }
 
     public async Task Run(CancellationToken ct)
@@ -96,11 +94,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
 
 
         // Persist
-        if (SystemState.SavedAt + TimeSpan.FromMinutes(1) < now)
-        {
-            SystemState.SavedAt = now;
-            await _persistention.WriteIfChange();            
-        }
+        await _stateMediator.PersistIfTimeout(now);
         
         
         // Sleep

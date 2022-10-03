@@ -1,0 +1,27 @@
+@using HeatPumpController.Web.Services
+<div class="row">
+    <div class="col-4">@SetPoint.Name</div>
+    <div class="col-4">@SetPoint.CurrentValue.ToString("F2")</div>
+    <div class="col-4">
+        <p>
+            <button class="btn btn-primary btn-sm" @onclick="Decrement">Minus</button>
+            @SetPoint.SetPointValue.ToString("F2")
+            <button class="btn btn-primary btn-sm" @onclick="Increment">Plus</button>
+        </p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public SetPoint SetPoint { get; set; }
+
+    private async Task Increment()
+    {
+        SetPoint.SetPointValue += 1;
+    }
+
+    private async Task Decrement()
+    {
+        SetPoint.SetPointValue -= 1;
+    }
+}

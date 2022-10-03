@@ -1,4 +1,4 @@
-namespace HeatPumpController.Controller.Svc.Models;
+namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentContext<TState> where TState : new()
 {
