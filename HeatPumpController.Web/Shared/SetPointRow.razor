@@ -2,11 +2,11 @@
 
 <div class="row">
     <div class="col-4">@SetPoint.Name</div>
-    <div class="col-4">@SetPoint.CurrentValue.ToString("F2")</div>
+    <div class="col-4">@CurrentValue</div>
     <div class="col-4">
         <p>
             <button class="btn btn-primary btn-sm" @onclick="Decrement">Minus</button>
-            @SetPoint.SetPointValue.ToString("F2")
+            @SetPointValue
             <button class="btn btn-primary btn-sm" @onclick="Increment">Plus</button>
         </p>
     </div>
@@ -16,10 +16,13 @@
 
     protected override void OnParametersSet()
     {
-        SetPoint.DataChanged += this.StateHasChanged;
+        SetPoint.DataChanged += () => InvokeAsync(StateHasChanged);
         base.OnParametersSet();
     }
 
+    private string SetPointValue => SetPoint.SetPointValue.ToString("F1");
+    private string CurrentValue => SetPoint.CurrentValue.ToString("F1");
+    
 
     [Parameter]
     public SetPoint SetPoint { get; set; }

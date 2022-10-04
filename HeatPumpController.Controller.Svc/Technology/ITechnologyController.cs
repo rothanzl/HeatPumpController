@@ -30,11 +30,12 @@ public class DemoTechnologyResources : ITechnologyResources
     
     public Task<Temperatures> GetTemperatures(CancellationToken ct)
     {
+        float tolerantField = 2;
         
         return Task.FromResult(new Temperatures( 
-            _random.Next(10, 15), 
-            _random.Next(30,34), 
-            _random.Next(20,24)));
+             10 +_random.NextSingle() * tolerantField, 
+             40 + _random.NextSingle() * tolerantField,
+             25 + _random.NextSingle() * tolerantField));
     }
 
     public ValueTask DisposeAsync()
