@@ -22,9 +22,15 @@ public class DemoTechnologyController : ITechnologyController
 
 public class DemoTechnologyResources : ITechnologyResources
 {
+    private readonly Random _random = new Random(DateTime.Now.Millisecond);
+    
     public Task<Temperatures> GetTemperatures(CancellationToken ct)
     {
-        return Task.FromResult(new Temperatures(10, 33, 23));
+        
+        return Task.FromResult(new Temperatures( 
+            _random.Next(10, 15), 
+            _random.Next(30,34), 
+            _random.Next(20,24)));
     }
 
     public ValueTask DisposeAsync()
