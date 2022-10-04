@@ -1,3 +1,5 @@
+using System;
+
 namespace HeatPumpController.Controller.Svc.Models;
 
 public class SystemState

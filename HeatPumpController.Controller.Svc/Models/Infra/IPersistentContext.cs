@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentContext<TState> where TState : new()

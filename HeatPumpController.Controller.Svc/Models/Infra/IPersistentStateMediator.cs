@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+
 namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentStateMediator
