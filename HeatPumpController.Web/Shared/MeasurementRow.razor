@@ -1,0 +1,30 @@
+@using HeatPumpController.Web.Services
+
+<div class="row">
+    <div class="col-4">
+        <p>@Name</p>
+    </div>
+    <div class="col-4">
+        <p>@CurrentValue</p>
+    </div>
+    <div class="col-4">
+        <p></p>
+    </div>
+</div>
+
+@code {
+
+    protected override void OnParametersSet()
+    {
+        Measurement.ValueChanged += () => InvokeAsync(StateHasChanged);
+        base.OnParametersSet();
+    }
+
+    private string CurrentValue => Measurement.Value.ToString("F1");
+    private string Name => Measurement.Name;
+    
+
+    [Parameter]
+    public Measurement Measurement { get; set; }
+
+}

@@ -89,7 +89,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         await using var resources = _technologyController.Open();
         var temperatures = await resources.GetTemperatures(ct);
 
-        await _stateMediator.SetSetPointTemperatures(new SetPointTemperatures(temperatures.TWather, temperatures.THeatherBack));
+        await _stateMediator.SetCurrentTemperatures(new CurrentTemperatures(
+            temperatures.TOut, temperatures.TWather, temperatures.THeatherBack));
 
         
         // Evaluate

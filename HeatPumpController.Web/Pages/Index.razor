@@ -1,13 +1,14 @@
 ﻿@page "/"
 @using HeatPumpController.Web.Services
-@inject IViewModel _viewModel
+@inject IViewModel ViewModel
 
 <PageTitle>Index</PageTitle>
 
 <h1>Vytápění domu</h1>
 
-<SetPointRow SetPoint="_viewModel.WaterTemperature"></SetPointRow>
-<SetPointRow SetPoint="_viewModel.HeaterTemperature"></SetPointRow>
+<SetPointRow SetPoint="ViewModel.WaterTemperature"></SetPointRow>
+<SetPointRow SetPoint="ViewModel.HeaterTemperature"></SetPointRow>
+<MeasurementRow Measurement="ViewModel.OutTemperature"></MeasurementRow>
 
 
 

@@ -1,16 +1,16 @@
-using System;
-using System.Threading.Tasks;
 
 namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentStateMediator
 {
-    SetPointTemperatures GetSetPointTemperatures();
+    SetPointTemperatures SetPointTemperatures { get; }
     Task SetSetPointTemperatures(SetPointTemperatures temperatures);
+    CurrentTemperatures CurrentTemperatures { get; }
+    Task SetCurrentTemperatures(CurrentTemperatures temperatures);
     Task PersistIfTimeout(DateTime now);
 
-    event DataChangedHandler DataChanged;
-    public delegate void DataChangedHandler();
+    event CurrentValuesChangedHandler CurrentValuesChanged;
+    public delegate void CurrentValuesChangedHandler();
 }
 
 public class PersistentStateMediator : IPersistentStateMediator
@@ -22,14 +22,23 @@ public class PersistentStateMediator : IPersistentStateMediator
         _persistence = persistence;
     }
 
-    public SetPointTemperatures GetSetPointTemperatures()
+    public SetPointTemperatures SetPointTemperatures
         => _persistence.State.SetPointTemperatures;
+
+    public CurrentTemperatures CurrentTemperatures
+        => _persistence.State.CurrentTemperatures;
+
+    public async Task SetCurrentTemperatures(CurrentTemperatures temperatures)
+    {
+        _persistence.State.CurrentTemperatures = temperatures;
+        await _persistence.WriteIfChange();
+        CurrentValuesChanged?.Invoke();
+    }
 
     public async Task SetSetPointTemperatures(SetPointTemperatures temperatures)
     {
         _persistence.State.SetPointTemperatures = temperatures;
         await _persistence.WriteIfChange();
-        DataChanged?.Invoke();
     }
         
 
@@ -45,5 +54,5 @@ public class PersistentStateMediator : IPersistentStateMediator
         return Task.CompletedTask;
     }
 
-    public event IPersistentStateMediator.DataChangedHandler? DataChanged;
+    public event IPersistentStateMediator.CurrentValuesChangedHandler? CurrentValuesChanged;
 }

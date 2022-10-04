@@ -1,13 +1,17 @@
 @using HeatPumpController.Web.Services
 
 <div class="row">
-    <div class="col-4">@SetPoint.Name</div>
-    <div class="col-4">@CurrentValue</div>
+    <div class="col-4">
+        <p>@Name</p>
+    </div>
+    <div class="col-4">
+        <p>@CurrentValue</p>
+    </div>
     <div class="col-4">
         <p>
-            <button class="btn btn-primary btn-sm" @onclick="Decrement">Minus</button>
+            <button class="btn btn-primary btn-sm" @onclick="Decrement" disabled="@Editable">Minus</button>
             @SetPointValue
-            <button class="btn btn-primary btn-sm" @onclick="Increment">Plus</button>
+            <button class="btn btn-primary btn-sm" @onclick="Increment" disabled="@Editable">Plus</button>
         </p>
     </div>
 </div>
@@ -16,23 +20,24 @@
 
     protected override void OnParametersSet()
     {
-        SetPoint.DataChanged += () => InvokeAsync(StateHasChanged);
+        SetPoint.ValueChanged += () => InvokeAsync(StateHasChanged);
         base.OnParametersSet();
     }
 
     private string SetPointValue => SetPoint.SetPointValue.ToString("F1");
-    private string CurrentValue => SetPoint.CurrentValue.ToString("F1");
-    
+    private string CurrentValue => SetPoint.Value.ToString("F1");
+    private string Name => SetPoint.Name;
+    private bool Editable => SetPoint.Editable;
 
     [Parameter]
     public SetPoint SetPoint { get; set; }
 
-    private async Task Increment()
+    private void Increment()
     {
         SetPoint.SetPointValue += 1;
     }
 
-    private async Task Decrement()
+    private void Decrement()
     {
         SetPoint.SetPointValue -= 1;
     }
