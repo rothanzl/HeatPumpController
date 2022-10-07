@@ -1,6 +1,4 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using HeatPumpController.Controller.Svc.Technology.Temperature;
 
 namespace HeatPumpController.Controller.Svc.Technology;
 
@@ -27,15 +25,27 @@ public class DemoTechnologyController : ITechnologyController
 public class TechnologyResources : ITechnologyResources
 {
     private readonly Random _random = new Random(DateTime.Now.Millisecond);
+
+    private readonly IOneWireTemperature _waterTemperatureDevice =
+        new OneWireTemperature("w1_bus_master1", "28-0214811c4bff");
+
+    private readonly IOneWireTemperature _heatherBackTemperatureDevice =
+        new OneWireTemperature("w1_bus_master1", "28-0214811c4bff");
     
-    public Task<Temperatures> GetTemperatures(CancellationToken ct)
+    
+    public async Task<Temperatures> GetTemperatures(CancellationToken ct)
     {
         float tolerantField = 2;
+
+        await Task.WhenAll(
+            _waterTemperatureDevice.ReadAsync(),
+            _heatherBackTemperatureDevice.ReadAsync());
         
-        return Task.FromResult(new Temperatures( 
+        
+        return new Temperatures( 
              10 +_random.NextSingle() * tolerantField, 
-             40 + _random.NextSingle() * tolerantField,
-             25 + _random.NextSingle() * tolerantField));
+             _waterTemperatureDevice.Value,
+             _heatherBackTemperatureDevice.Value);
     }
 
     public ValueTask DisposeAsync()
