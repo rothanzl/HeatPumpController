@@ -35,7 +35,7 @@ public class WeatherForecast : IWeatherForecast
     {
         if (RefreshTimeoutExpired)
         {
-            _logger.LogDebug("Refresh data");
+            _logger.LogInformation("Refresh data");
             return RefreshData();
         }
         
