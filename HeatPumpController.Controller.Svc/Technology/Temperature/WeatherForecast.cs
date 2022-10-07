@@ -44,11 +44,16 @@ public class WeatherForecast : IWeatherForecast
 
     private async Task RefreshData()
     {
-        ResponseObject.Root? responseObject = null;
+        ResponseObject.Root? responseObject;
         HttpResponseMessage response = await _client.GetAsync(Url);
         if (response.IsSuccessStatusCode)
         {
             responseObject = await response.Content.ReadFromJsonAsync<ResponseObject.Root>();
+        }
+        else
+        {
+            _logger.LogError("Got response code {Code}", response.StatusCode);
+            return;
         }
 
         if (responseObject == null)

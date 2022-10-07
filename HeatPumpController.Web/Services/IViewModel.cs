@@ -8,6 +8,9 @@ public interface IViewModel : IDisposable
     SetPoint WaterTemperature { get; }
     SetPoint HeaterTemperature { get; }
     Measurement OutTemperature { get; }
+    DateTime CurrentTime { get; }
+
+    event Measurement.DataChangedHandler DataChanged;
 }
 
 public class ViewModel : IViewModel
@@ -45,11 +48,17 @@ public class ViewModel : IViewModel
         WaterTemperature.Value = temp.WaterTemperature;
         HeaterTemperature.Value = temp.HeatingTemperature;
         OutTemperature.Value = temp.OutTemperature;
+        CurrentTime = DateTime.Now;
+        
+        DataChanged?.Invoke();
     }
+    
+    public event Measurement.DataChangedHandler DataChanged;
 
     public SetPoint WaterTemperature { get; }
     public SetPoint HeaterTemperature { get; }
     public Measurement OutTemperature { get; }
+    public DateTime CurrentTime { get; private set; }
 
 
     public void Dispose()

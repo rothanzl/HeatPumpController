@@ -16,6 +16,8 @@ public static class ServiceDiRegister
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
         services.AddSingleton<ITechnologyResources, TechnologyResources>();
         services.AddSingleton<IWeatherForecast, WeatherForecast>();
+        services.AddSingleton<IWaterTemperature, WaterTemperature>();
+        services.AddSingleton<IHeaterBackTemperature, HeaterBackTemperature>();
 
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         

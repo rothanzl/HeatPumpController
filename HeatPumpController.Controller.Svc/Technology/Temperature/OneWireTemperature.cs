@@ -1,4 +1,6 @@
+using HeatPumpController.Controller.Svc.Config;
 using Iot.Device.OneWire;
+using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Temperature;
 
@@ -8,12 +10,36 @@ public interface IOneWireTemperature : ITemperatureDevice
     string DeviceId { get; }
 }
 
-public class OneWireTemperature : IOneWireTemperature
+public interface IWaterTemperature : IOneWireTemperature {}
+
+public class WaterTemperature : OneWireTemperature, IWaterTemperature
 {
-    public OneWireTemperature(string busId, string deviceId)
+    public WaterTemperature(IOptions<ControllerConfig> config, ILogger<WaterTemperature> logger) : 
+        base(config.Value.WaterTemperatureConfig, logger)
     {
-        BusId = busId;
-        DeviceId = deviceId;
+    }
+}
+
+public interface IHeaterBackTemperature : IOneWireTemperature {}
+
+public class HeaterBackTemperature : OneWireTemperature, IHeaterBackTemperature
+{
+    public HeaterBackTemperature(IOptions<ControllerConfig> config, ILogger<HeaterBackTemperature> logger) : 
+        base(config.Value.HeatherBackTemperatureConfig, logger)
+    {
+    }
+}
+
+
+public abstract class OneWireTemperature : IOneWireTemperature
+{
+    private readonly ILogger<OneWireTemperature> _logger;
+    
+    public OneWireTemperature(OneWireDeviceConfig config, ILogger<OneWireTemperature> logger)
+    {
+        BusId = config.BusId;
+        DeviceId = config.DeviceId;
+        _logger = logger;
     }
 
     public string BusId { get; }
@@ -23,9 +49,17 @@ public class OneWireTemperature : IOneWireTemperature
     
     public async Task ReadAsync()
     {
-        OneWireThermometerDevice dev = new(BusId, DeviceId);
-        var temp = await dev.ReadTemperatureAsync();
-        Value = (float)temp.Value;
+        try
+        {
+            OneWireThermometerDevice dev = new(BusId, DeviceId);
+            var temp = await dev.ReadTemperatureAsync();
+            Value = (float)temp.Value;
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error ReadAsync");
+            Value = default;
+        }
     }
     
     

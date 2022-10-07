@@ -1,10 +1,15 @@
 ﻿@page "/"
 @using HeatPumpController.Web.Services
+@using System.Globalization
 @inject IViewModel ViewModel
 
 <PageTitle>Index</PageTitle>
 
 <h1>Vytápění domu</h1>
+
+<p>
+    @DateTime
+</p>
 
 <SetPointRow SetPoint="ViewModel.WaterTemperature"></SetPointRow>
 <SetPointRow SetPoint="ViewModel.HeaterTemperature"></SetPointRow>
@@ -13,3 +18,14 @@
 
 
 
+@code{
+
+    private string DateTime => ViewModel.CurrentTime.ToString(CultureInfo.InvariantCulture);
+
+    protected override void OnInitialized()
+    {
+        ViewModel.DataChanged += () => InvokeAsync(StateHasChanged);
+        base.OnInitialized();
+    }
+
+}

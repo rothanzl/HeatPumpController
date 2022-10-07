@@ -31,18 +31,17 @@ public class TechnologyController : ITechnologyController
 
 public class TechnologyResources : ITechnologyResources
 {
-    private readonly IOneWireTemperature _waterTemperatureDevice =
-        new OneWireTemperature("w1_bus_master1", "28-0214811c4bff");
-
-    private readonly IOneWireTemperature _heatherBackTemperatureDevice =
-        new OneWireTemperature("w1_bus_master1", "28-0214811c4bff");
-
+    private readonly IWaterTemperature _waterTemperatureDevice;
+    private readonly IHeaterBackTemperature _heatherBackTemperatureDevice;
     private readonly IWeatherForecast _weatherForecast;
 
-
-    public TechnologyResources(IWeatherForecast weatherForecast)
+    public TechnologyResources(IWeatherForecast weatherForecast, 
+        IWaterTemperature waterTemperatureDevice, 
+        IHeaterBackTemperature heatherBackTemperatureDevice)
     {
         _weatherForecast = weatherForecast;
+        _waterTemperatureDevice = waterTemperatureDevice;
+        _heatherBackTemperatureDevice = heatherBackTemperatureDevice;
     }
 
     public async Task<Temperatures> GetTemperatures(CancellationToken ct)
