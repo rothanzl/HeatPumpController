@@ -16,7 +16,7 @@ public class WeatherForecast : IWeatherForecast
     private readonly ILogger<WeatherForecast> _logger;
 
     private string Url => $"https://api.openweathermap.org/data/3.0/onecall?lat=50.02491690&lon=14.06218446&appid={_apiKey}&units=metric";
-    private TimeSpan RefreshTimeout { get; } = TimeSpan.FromMinutes(1);
+    private TimeSpan RefreshTimeout { get; } = TimeSpan.FromMinutes(10);
     private bool RefreshTimeoutExpired => _lastRefreshDt + RefreshTimeout < DateTime.Now; 
     
     private DateTime _lastRefreshDt = DateTime.MinValue;
