@@ -1,5 +1,6 @@
-using System.Device.Model;
 using System.Text.Json.Serialization;
+using HeatPumpController.Controller.Svc.Config;
+using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Temperature;
 
@@ -12,6 +13,7 @@ public class WeatherForecast : IWeatherForecast
 {
     private readonly string _apiKey;
     private readonly HttpClient _client = new();
+    private readonly ILogger<WeatherForecast> _logger;
 
     private string Url => $"https://api.openweathermap.org/data/3.0/onecall?lat=50.02491690&lon=14.06218446&appid={_apiKey}&units=metric";
     private TimeSpan RefreshTimeout { get; } = TimeSpan.FromMinutes(10);
@@ -20,18 +22,20 @@ public class WeatherForecast : IWeatherForecast
     private DateTime _lastRefreshDt = DateTime.MinValue;
     
     
-    public WeatherForecast(string apiKey)
+    public WeatherForecast(IOptions<ControllerConfig> config, ILogger<WeatherForecast> logger)
     {
-        if (string.IsNullOrWhiteSpace(apiKey))
+        if (string.IsNullOrWhiteSpace(config.Value.WeatherForecastApiKey))
             throw new NullReferenceException("Missing weather forecast api key");
         
-        _apiKey = apiKey;
+        _apiKey = config.Value.WeatherForecastApiKey;
+        _logger = logger;
     }
 
     public Task ReadAsync()
     {
         if (RefreshTimeoutExpired)
         {
+            _logger.LogDebug("Refresh data");
             return RefreshData();
         }
         

@@ -1,6 +1,4 @@
-using HeatPumpController.Controller.Svc.Config;
 using HeatPumpController.Controller.Svc.Technology.Temperature;
-using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology;
 
@@ -33,9 +31,6 @@ public class TechnologyController : ITechnologyController
 
 public class TechnologyResources : ITechnologyResources
 {
-    private readonly Random _random = new Random(DateTime.Now.Millisecond);
-    private readonly IOptions<ControllerConfig> _config;
-
     private readonly IOneWireTemperature _waterTemperatureDevice =
         new OneWireTemperature("w1_bus_master1", "28-0214811c4bff");
 
@@ -45,10 +40,9 @@ public class TechnologyResources : ITechnologyResources
     private readonly IWeatherForecast _weatherForecast;
 
 
-    public TechnologyResources(IOptions<ControllerConfig> config)
+    public TechnologyResources(IWeatherForecast weatherForecast)
     {
-        _config = config;
-        _weatherForecast = new WeatherForecast(config.Value.WeatherForecastApiKey);
+        _weatherForecast = weatherForecast;
     }
 
     public async Task<Temperatures> GetTemperatures(CancellationToken ct)
