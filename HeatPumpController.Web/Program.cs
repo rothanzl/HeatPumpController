@@ -4,7 +4,7 @@ using HeatPumpController.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterControllerSvc();
+builder.Services.RegisterControllerSvc(builder);
 
 builder.Services.AddSingleton<IViewModel, ViewModel>();
 

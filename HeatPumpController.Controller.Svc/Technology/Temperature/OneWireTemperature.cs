@@ -2,13 +2,10 @@ using Iot.Device.OneWire;
 
 namespace HeatPumpController.Controller.Svc.Technology.Temperature;
 
-public interface IOneWireTemperature
+public interface IOneWireTemperature : ITemperatureDevice
 {
     string BusId { get; }
     string DeviceId { get; }
-
-    Task ReadAsync();
-    float Value { get; }
 }
 
 public class OneWireTemperature : IOneWireTemperature
