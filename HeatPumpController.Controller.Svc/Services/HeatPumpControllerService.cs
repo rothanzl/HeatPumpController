@@ -91,8 +91,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         // Read values
         await using var resources = _technologyController.Open();
         var temperatures = await resources.GetTemperatures(ct);
-
-        OneWireTemperature.EnumerateBusAndDeviceIds(_logger);
+        
 
         await _stateMediator.SetCurrentTemperatures(new CurrentTemperatures(
             temperatures.TOut, temperatures.TWather, temperatures.THeatherBack));
