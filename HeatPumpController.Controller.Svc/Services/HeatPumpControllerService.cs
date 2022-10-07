@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Technology;
+using HeatPumpController.Controller.Svc.Technology.Temperature;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -73,11 +74,13 @@ public class ServiceLoopIteration : IServiceLoopIteration
 {
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
+    private readonly ILogger<ServiceLoopIteration> _logger;
 
-    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator)
+    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, ILogger<ServiceLoopIteration> logger)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
+        _logger = logger;
     }
 
     public async Task Run(CancellationToken ct)
@@ -88,6 +91,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         // Read values
         await using var resources = _technologyController.Open();
         var temperatures = await resources.GetTemperatures(ct);
+
+        OneWireTemperature.EnumerateBusAndDeviceIds(_logger);
 
         await _stateMediator.SetCurrentTemperatures(new CurrentTemperatures(
             temperatures.TOut, temperatures.TWather, temperatures.THeatherBack));

@@ -20,11 +20,11 @@ public class DemoTechnologyController : ITechnologyController
 {
     public ITechnologyResources Open()
     {
-        return new DemoTechnologyResources();
+        return new TechnologyResources();
     }
 }
 
-public class DemoTechnologyResources : ITechnologyResources
+public class TechnologyResources : ITechnologyResources
 {
     private readonly Random _random = new Random(DateTime.Now.Millisecond);
     

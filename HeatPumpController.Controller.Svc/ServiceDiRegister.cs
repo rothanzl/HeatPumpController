@@ -13,7 +13,7 @@ public static class ServiceDiRegister
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
         services.AddSingleton(typeof(IPersistentContext<>), typeof(PersistentContext<>));
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
-        
+
         services.AddHostedService<HeatPumpControllerService>();
         
         return services;
