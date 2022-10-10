@@ -18,6 +18,8 @@ public class WaterTemperature : OneWireTemperature, IWaterTemperature
         base(config.Value.WaterTemperatureConfig, logger)
     {
     }
+
+    protected override TemperatureMonitoring Monitoring { get; } = new("water_reservoir");
 }
 
 public interface IHeaterBackTemperature : IOneWireTemperature {}
@@ -28,12 +30,15 @@ public class HeaterBackTemperature : OneWireTemperature, IHeaterBackTemperature
         base(config.Value.HeatherBackTemperatureConfig, logger)
     {
     }
+    
+    protected override TemperatureMonitoring Monitoring { get; } = new("heater_back");
 }
 
 
 public abstract class OneWireTemperature : IOneWireTemperature
 {
     private readonly ILogger<OneWireTemperature> _logger;
+    protected abstract TemperatureMonitoring Monitoring { get; }
     
     public OneWireTemperature(OneWireDeviceConfig config, ILogger<OneWireTemperature> logger)
     {
@@ -60,6 +65,8 @@ public abstract class OneWireTemperature : IOneWireTemperature
             _logger.LogError(e, "Error ReadAsync");
             Value = default;
         }
+        
+        Monitoring.Set(Value);
     }
     
     

@@ -1,5 +1,6 @@
 using HeatPumpController.Controller.Svc;
 using HeatPumpController.Web.Services;
+using Prometheus;
 using Prometheus.Client.AspNetCore;
 using Prometheus.Client.DependencyInjection;
 
@@ -25,7 +26,10 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseStaticFiles();
+
+app.UseMetricServer();
 app.UsePrometheusServer();
+
 app.UseRouting();
 
 app.MapBlazorHub();

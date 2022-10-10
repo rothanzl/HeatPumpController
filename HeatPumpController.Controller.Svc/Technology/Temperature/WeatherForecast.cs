@@ -14,6 +14,7 @@ public class WeatherForecast : IWeatherForecast
     private readonly string _apiKey;
     private readonly HttpClient _client = new();
     private readonly ILogger<WeatherForecast> _logger;
+    private readonly TemperatureMonitoring _monitoring = new("out_ambience");
 
     private string Url => $"https://api.openweathermap.org/data/3.0/onecall?lat=50.02491690&lon=14.06218446&appid={_apiKey}&units=metric";
     private TimeSpan RefreshTimeout { get; } = TimeSpan.FromMinutes(10);
@@ -57,12 +58,20 @@ public class WeatherForecast : IWeatherForecast
         }
 
         if (responseObject == null)
-            return;
-
-
-        Value = responseObject.Current.Temp;
+        {
+            _logger.LogError("Error pare response object");
+            Value = default;
+        }
+        else
+        {
+            Value = responseObject.Current.Temp;
+        }
+        
+        _monitoring.Set(Value);
         _lastRefreshDt = DateTime.Now;
     }
+    
+    
 
     public float Value { get; private set; }
 
