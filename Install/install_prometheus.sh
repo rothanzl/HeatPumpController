@@ -29,10 +29,12 @@ sudo mv consoles/ console_libraries/ /etc/prometheus/
 for i in rules rules.d files_sd; do sudo chown -R prometheus:prometheus /etc/prometheus/${i}; done
 for i in rules rules.d files_sd; do sudo chmod -R 775 /etc/prometheus/${i}; done
 sudo chown -R prometheus:prometheus /var/lib/prometheus/
+sudo chown -R prometheus:prometheus /media/pi/USB1/prometheus-data/
 
 sudo systemctl daemon-reload
 sudo systemctl start prometheus
 sudo systemctl enable prometheus
+sudo systemctl restart prometheus
 
 cd /tmp
 sudo rm -r prometheus

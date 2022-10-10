@@ -6,8 +6,8 @@ After=network-online.target
 
 [Service]
 Type=simple
-User=prometheus
-Group=prometheus
+User=pi
+Group=pi
 ExecReload=/bin/kill -HUP \$MAINPID
 ExecStart=/usr/local/bin/prometheus \
   --config.file=/etc/prometheus/prometheus.yml \
@@ -21,6 +21,7 @@ ExecStart=/usr/local/bin/prometheus \
 
 SyslogIdentifier=prometheus
 Restart=always
+RestartSec=10
 
 [Install]
 WantedBy=multi-user.target
