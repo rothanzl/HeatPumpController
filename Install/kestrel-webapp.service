@@ -1,0 +1,17 @@
+[Unit]
+Description=Heat Pump controller
+
+[Service]
+WorkingDirectory=/media/pi/USB1/HeatPumpController/bin
+ExecStart=/home/pi/.dotnet/dotnet /media/pi/USB1/HeatPumpController/bin/HeatPumpController.Web.dll
+Restart=always
+# Restart service after 10 seconds if the dotnet service crashes:
+RestartSec=10
+KillSignal=SIGINT
+SyslogIdentifier=dotnet-example
+User=pi
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=DOTNET_PRINT_TELEMETRY_MESSAGE=false
+
+[Install]
+WantedBy=multi-user.target
