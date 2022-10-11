@@ -45,30 +45,50 @@ public class WeatherForecast : IWeatherForecast
 
     private async Task RefreshData()
     {
-        ResponseObject.Root? responseObject;
-        HttpResponseMessage response = await _client.GetAsync(Url);
-        if (response.IsSuccessStatusCode)
+        HttpResponseMessage? response = null;
+        try
         {
-            responseObject = await response.Content.ReadFromJsonAsync<ResponseObject.Root>();
-        }
-        else
-        {
-            _logger.LogError("Got response code {Code}", response.StatusCode);
-            return;
-        }
+            ResponseObject.Root? responseObject = null;
+            response = await _client.GetAsync(Url);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    responseObject = await response.Content.ReadFromJsonAsync<ResponseObject.Root>();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Cannot parse response '{Response}'",
+                        await response.Content.ReadAsStringAsync());
+                    throw;
+                }
+            }
+            else
+            {
+                _logger.LogError("Got response code {Code}", response.StatusCode);
+                return;
+            }
 
-        if (responseObject == null)
+            if (responseObject == null)
+            {
+                _logger.LogError("Error pare response object");
+                Value = default;
+            }
+            else
+            {
+                Value = responseObject.Current.Temp;
+            }
+        }
+        catch (Exception e)
         {
-            _logger.LogError("Error pare response object");
             Value = default;
+            _logger.LogError(e, "Error get forecast");
         }
-        else
+        finally
         {
-            Value = responseObject.Current.Temp;
+            _monitoring.Set(Value);
+            _lastRefreshDt = DateTime.Now;
         }
-        
-        _monitoring.Set(Value);
-        _lastRefreshDt = DateTime.Now;
     }
     
     
