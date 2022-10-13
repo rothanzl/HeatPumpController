@@ -1,13 +1,8 @@
-using System;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Technology;
-using HeatPumpController.Controller.Svc.Technology.Temperature;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using HeatPumpController.Controller.Svc.Technology.Relay;
 
 namespace HeatPumpController.Controller.Svc.Services;
 
@@ -60,12 +55,15 @@ public class HeatPumpControllerService : IHostedService
             catch (Exception e)
             {
                 _logger.LogError(e, "Service loop error");
+            }finally
+            {
+                await _serviceLoopIteration.DisposeAsync();
             }
         }
     }
 }
 
-public interface IServiceLoopIteration
+public interface IServiceLoopIteration : IAsyncDisposable
 {
     Task Run(CancellationToken ct);
 }
@@ -75,6 +73,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
+    private readonly TestRelay _testRelay = new();
 
     public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, ILogger<ServiceLoopIteration> logger)
     {
@@ -83,6 +82,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _logger = logger;
     }
 
+    private Level _level = Level.High;
+    
     public async Task Run(CancellationToken ct)
     {
         var sw = Stopwatch.StartNew();
@@ -101,6 +102,14 @@ public class ServiceLoopIteration : IServiceLoopIteration
         
         
         // Act
+        _level = _level switch
+        {
+            Level.High => Level.Low,
+            Level.Low => Level.High,
+            _ => throw new ArgumentOutOfRangeException(nameof(_level), _level.ToString())
+        };
+        _testRelay.Set(_level);
+        
 
 
         // Persist
@@ -112,6 +121,13 @@ public class ServiceLoopIteration : IServiceLoopIteration
         var sleepTime = TimeSpan.FromSeconds(1) - sw.Elapsed;
         if(sleepTime > TimeSpan.Zero)
             await Task.Delay(sleepTime, ct);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _testRelay.Dispose();
+        
+        return ValueTask.CompletedTask;
     }
 }
 
