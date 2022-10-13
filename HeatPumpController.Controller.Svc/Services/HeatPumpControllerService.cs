@@ -73,7 +73,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
-    private readonly TestRelay _testRelay = new();
+    private TestRelay? _testRelay;
 
     public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, ILogger<ServiceLoopIteration> logger)
     {
@@ -86,6 +86,13 @@ public class ServiceLoopIteration : IServiceLoopIteration
     
     public async Task Run(CancellationToken ct)
     {
+        if (_testRelay == null)
+        {
+            _logger.LogInformation("Create test relay");
+            _testRelay = new();
+            _logger.LogInformation("Created test relay");
+        }
+        
         var sw = Stopwatch.StartNew();
         var now = DateTime.Now;
         
@@ -108,7 +115,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
             Level.Low => Level.High,
             _ => throw new ArgumentOutOfRangeException(nameof(_level), _level.ToString())
         };
-        _testRelay.Set(_level);
+        _testRelay?.Set(_level);
         
 
 
@@ -125,7 +132,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
 
     public ValueTask DisposeAsync()
     {
-        _testRelay.Dispose();
+        _testRelay?.Dispose();
         
         return ValueTask.CompletedTask;
     }
