@@ -132,7 +132,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
 
     public ValueTask DisposeAsync()
     {
-        _testRelay?.Dispose();
+        
         
         return ValueTask.CompletedTask;
     }

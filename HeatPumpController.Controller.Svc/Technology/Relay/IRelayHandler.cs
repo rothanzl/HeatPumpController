@@ -2,7 +2,7 @@ using System.Device.Gpio;
 
 namespace HeatPumpController.Controller.Svc.Technology.Relay;
 
-public interface IRelayHandler : IDisposable
+public interface IRelayHandler
 {
     void Set(Level level);
 }
@@ -16,16 +16,12 @@ public enum Level
 public abstract class RelayHandlerBase : IRelayHandler
 {
     private int PinNumber { get; }
-
-    private readonly GpioController _controller; 
     
     protected RelayHandlerBase(int pinNumber)
     {
         PinNumber = pinNumber;
         
-        _controller = new GpioController();
-        _controller.OpenPin(PinNumber, PinMode.Output);
-        _controller.Write(pinNumber: PinNumber, PinValue.High);
+        
     }
     
     
@@ -38,11 +34,9 @@ public abstract class RelayHandlerBase : IRelayHandler
             _ => throw new ArgumentOutOfRangeException(nameof(level), level.ToString(), "Unsupported value")
         };
         
-        _controller.Write(pinNumber: PinNumber, value);
+        using var controller = new GpioController();
+        controller.OpenPin(PinNumber, PinMode.Output);
+        controller.Write(pinNumber: PinNumber, value);
     }
 
-    public void Dispose()
-    {
-        _controller.Dispose();
-    }
 }
