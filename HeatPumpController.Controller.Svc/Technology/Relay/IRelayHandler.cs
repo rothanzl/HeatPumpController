@@ -25,6 +25,7 @@ public abstract class RelayHandlerBase : IRelayHandler
         
         _controller = new GpioController();
         _controller.OpenPin(PinNumber, PinMode.Output);
+        _controller.Write(pinNumber: PinNumber, PinValue.High);
     }
     
     
