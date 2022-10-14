@@ -6,7 +6,7 @@ namespace HeatPumpController.Controller.Svc.Technology.Relay;
 
 public interface IRelayHandler
 {
-    void Set(bool level);
+    void Set(bool set);
 }
 
 public abstract class RelayHandlerBase : IRelayHandler
@@ -21,11 +21,11 @@ public abstract class RelayHandlerBase : IRelayHandler
     }
     
     
-    public void Set(bool level)
+    public void Set(bool set)
     {
         if (DummyProbe) return;
         
-        PinValue value = level ? PinValue.High : PinValue.Low;
+        PinValue value = set ? PinValue.Low : PinValue.High;
         
         using var controller = new GpioController();
         controller.OpenPin(PinNumber, PinMode.Output);

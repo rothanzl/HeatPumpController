@@ -30,7 +30,7 @@
         base.OnInitialized();
     }
 
-    private string TestRelayButtonText => "Test Relay " + ViewModel.TestRelayState;
+    private string TestRelayButtonText => "Test Relay set: " + ViewModel.TestRelayState;
     private void TestRelayButtonClick()
     {
         ViewModel.TestRelayState = !ViewModel.TestRelayState;
