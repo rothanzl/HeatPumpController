@@ -18,6 +18,7 @@ public class WeatherForecast : IWeatherForecast
 
     private string Url => $"https://api.openweathermap.org/data/3.0/onecall?lat=50.02491690&lon=14.06218446&appid={_apiKey}&units=metric";
     private TimeSpan RefreshTimeout { get; } = TimeSpan.FromMinutes(10);
+    private bool DummyProbe { get; }
     private bool RefreshTimeoutExpired => _lastRefreshDt + RefreshTimeout < DateTime.Now; 
     
     private DateTime _lastRefreshDt = DateTime.MinValue;
@@ -30,10 +31,14 @@ public class WeatherForecast : IWeatherForecast
         
         _apiKey = config.Value.WeatherForecastApiKey;
         _logger = logger;
+        DummyProbe = config.Value.DummyProbes;
     }
 
     public Task ReadAsync()
     {
+        if(DummyProbe)
+            return Task.CompletedTask;
+        
         if (RefreshTimeoutExpired)
         {
             _logger.LogInformation("Refresh data");

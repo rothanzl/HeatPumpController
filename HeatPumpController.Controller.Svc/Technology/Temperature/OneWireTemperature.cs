@@ -15,8 +15,9 @@ public interface IWaterTemperature : IOneWireTemperature {}
 public class WaterTemperature : OneWireTemperature, IWaterTemperature
 {
     public WaterTemperature(IOptions<ControllerConfig> config, ILogger<WaterTemperature> logger) : 
-        base(config.Value.WaterTemperatureConfig, logger)
+        base(config.Value.WaterTemperatureConfig, logger, config)
     {
+        
     }
 
     protected override TemperatureMonitoring Monitoring { get; } = new("water_reservoir");
@@ -27,7 +28,7 @@ public interface IHeaterBackTemperature : IOneWireTemperature {}
 public class HeaterBackTemperature : OneWireTemperature, IHeaterBackTemperature
 {
     public HeaterBackTemperature(IOptions<ControllerConfig> config, ILogger<HeaterBackTemperature> logger) : 
-        base(config.Value.HeatherBackTemperatureConfig, logger)
+        base(config.Value.HeatherBackTemperatureConfig, logger, config)
     {
     }
     
@@ -38,13 +39,16 @@ public class HeaterBackTemperature : OneWireTemperature, IHeaterBackTemperature
 public abstract class OneWireTemperature : IOneWireTemperature
 {
     private readonly ILogger<OneWireTemperature> _logger;
+    private bool DummyProbe { get; }
     protected abstract TemperatureMonitoring Monitoring { get; }
     
-    public OneWireTemperature(OneWireDeviceConfig config, ILogger<OneWireTemperature> logger)
+    public OneWireTemperature(OneWireDeviceConfig config, ILogger<OneWireTemperature> logger,
+        IOptions<ControllerConfig> globalConfig)
     {
         BusId = config.BusId;
         DeviceId = config.DeviceId;
         _logger = logger;
+        DummyProbe = globalConfig.Value.DummyProbes;
     }
 
     public string BusId { get; }
@@ -54,6 +58,8 @@ public abstract class OneWireTemperature : IOneWireTemperature
     
     public async Task ReadAsync()
     {
+        if (DummyProbe) return;
+        
         try
         {
             OneWireThermometerDevice dev = new(BusId, DeviceId);

@@ -9,6 +9,8 @@ public interface IViewModel : IDisposable
     SetPoint HeaterTemperature { get; }
     Measurement OutTemperature { get; }
     DateTime CurrentTime { get; }
+    
+    bool TestRelayState { get; set; }
 
     event Measurement.DataChangedHandler DataChanged;
 }
@@ -59,6 +61,12 @@ public class ViewModel : IViewModel
     public SetPoint HeaterTemperature { get; }
     public Measurement OutTemperature { get; }
     public DateTime CurrentTime { get; private set; }
+
+    public bool TestRelayState
+    {
+        get => _stateMediator.Relays.TestRelay;
+        set => _stateMediator.Relays.TestRelay = value;
+    }
 
 
     public void Dispose()

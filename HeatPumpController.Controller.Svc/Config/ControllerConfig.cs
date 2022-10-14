@@ -3,6 +3,8 @@ namespace HeatPumpController.Controller.Svc.Config;
 public class ControllerConfig
 {
     public const string SectionName = nameof(ControllerConfig);
+
+    public bool DummyProbes { get; init; } = false;
     
     public string WeatherForecastApiKey { get; init; } = string.Empty;
 

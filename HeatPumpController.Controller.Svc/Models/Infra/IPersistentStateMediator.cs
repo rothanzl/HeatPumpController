@@ -6,6 +6,7 @@ public interface IPersistentStateMediator
     SetPointTemperatures SetPointTemperatures { get; }
     Task SetSetPointTemperatures(SetPointTemperatures temperatures);
     CurrentTemperatures CurrentTemperatures { get; }
+    RelayState Relays { get; }
     Task SetCurrentTemperatures(CurrentTemperatures temperatures);
     Task PersistIfTimeout(DateTime now);
 
@@ -27,6 +28,8 @@ public class PersistentStateMediator : IPersistentStateMediator
 
     public CurrentTemperatures CurrentTemperatures
         => _persistence.State.CurrentTemperatures;
+
+    public RelayState Relays => _persistence.State.RelayState;
 
     public async Task SetCurrentTemperatures(CurrentTemperatures temperatures)
     {

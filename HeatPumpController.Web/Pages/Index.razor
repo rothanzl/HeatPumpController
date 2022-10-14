@@ -15,7 +15,9 @@
 <SetPointRow SetPoint="ViewModel.HeaterTemperature"></SetPointRow>
 <MeasurementRow Measurement="ViewModel.OutTemperature"></MeasurementRow>
 
-
+<p>
+    <button @onclick="TestRelayButtonClick">@TestRelayButtonText</button>
+</p>
 
 
 @code{
@@ -26,6 +28,12 @@
     {
         ViewModel.DataChanged += () => InvokeAsync(StateHasChanged);
         base.OnInitialized();
+    }
+
+    private string TestRelayButtonText => "Test Relay " + ViewModel.TestRelayState;
+    private void TestRelayButtonClick()
+    {
+        ViewModel.TestRelayState = !ViewModel.TestRelayState;
     }
 
 }

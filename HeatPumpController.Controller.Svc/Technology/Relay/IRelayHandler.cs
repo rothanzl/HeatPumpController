@@ -1,38 +1,31 @@
 using System.Device.Gpio;
+using HeatPumpController.Controller.Svc.Config;
+using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Relay;
 
 public interface IRelayHandler
 {
-    void Set(Level level);
-}
-
-public enum Level
-{
-    High,
-    Low,
+    void Set(bool level);
 }
 
 public abstract class RelayHandlerBase : IRelayHandler
 {
     private int PinNumber { get; }
+    private bool DummyProbe { get; }
     
-    protected RelayHandlerBase(int pinNumber)
+    protected RelayHandlerBase(int pinNumber, IOptions<ControllerConfig> config)
     {
         PinNumber = pinNumber;
-        
-        
+        DummyProbe = config.Value.DummyProbes;
     }
     
     
-    public void Set(Level level)
+    public void Set(bool level)
     {
-        PinValue value = level switch
-        {
-            Level.High => PinValue.High,
-            Level.Low => PinValue.Low,
-            _ => throw new ArgumentOutOfRangeException(nameof(level), level.ToString(), "Unsupported value")
-        };
+        if (DummyProbe) return;
+        
+        PinValue value = level ? PinValue.High : PinValue.Low;
         
         using var controller = new GpioController();
         controller.OpenPin(PinNumber, PinMode.Output);
