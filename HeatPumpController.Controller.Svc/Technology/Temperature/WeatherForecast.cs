@@ -166,7 +166,7 @@ public class WeatherForecast : IWeatherForecast
 
     public record Minutely(
         [property: JsonPropertyName("dt")] int Dt,
-        [property: JsonPropertyName("precipitation")] int Precipitation
+        [property: JsonPropertyName("precipitation")] float Precipitation
     );
 
     public record Rain(
