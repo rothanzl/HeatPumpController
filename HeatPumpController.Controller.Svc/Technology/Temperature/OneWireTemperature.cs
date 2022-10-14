@@ -39,7 +39,7 @@ public class HeaterBackTemperature : OneWireTemperature, IHeaterBackTemperature
 public abstract class OneWireTemperature : IOneWireTemperature
 {
     private readonly ILogger<OneWireTemperature> _logger;
-    private bool DummyProbe { get; }
+    private bool DummyTechnology { get; }
     protected abstract TemperatureMonitoring Monitoring { get; }
     
     public OneWireTemperature(OneWireDeviceConfig config, ILogger<OneWireTemperature> logger,
@@ -48,7 +48,7 @@ public abstract class OneWireTemperature : IOneWireTemperature
         BusId = config.BusId;
         DeviceId = config.DeviceId;
         _logger = logger;
-        DummyProbe = globalConfig.Value.DummyProbes;
+        DummyTechnology = globalConfig.Value.DummyTechnology;
     }
 
     public string BusId { get; }
@@ -58,7 +58,11 @@ public abstract class OneWireTemperature : IOneWireTemperature
     
     public async Task ReadAsync()
     {
-        if (DummyProbe) return;
+        if (DummyTechnology)
+        {
+            SetDummyValue();
+            return;
+        }
         
         try
         {
@@ -73,6 +77,11 @@ public abstract class OneWireTemperature : IOneWireTemperature
         }
         
         Monitoring.Set(Value);
+    }
+
+    private void SetDummyValue()
+    {
+        Value = new Random().NextSingle() * 50;
     }
     
     

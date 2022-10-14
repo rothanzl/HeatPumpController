@@ -12,18 +12,18 @@ public interface IRelayHandler
 public abstract class RelayHandlerBase : IRelayHandler
 {
     private int PinNumber { get; }
-    private bool DummyProbe { get; }
+    private bool DummyTechnology { get; }
     
     protected RelayHandlerBase(int pinNumber, IOptions<ControllerConfig> config)
     {
         PinNumber = pinNumber;
-        DummyProbe = config.Value.DummyProbes;
+        DummyTechnology = config.Value.DummyTechnology;
     }
     
     
     public void Set(bool set)
     {
-        if (DummyProbe) return;
+        if (DummyTechnology) return;
         
         PinValue value = set ? PinValue.Low : PinValue.High;
         

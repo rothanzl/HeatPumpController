@@ -14,7 +14,6 @@ public static class ServiceDiRegister
     {
         services.AddSingleton<ITechnologyController, TechnologyController>();
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
-        services.AddSingleton(typeof(IPersistentContext<>), typeof(PersistentContext<>));
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
         services.AddSingleton<ITechnologyResources, TechnologyResources>();
         services.AddSingleton<IWeatherForecast, WeatherForecast>();

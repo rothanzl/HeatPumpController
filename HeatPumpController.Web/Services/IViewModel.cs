@@ -65,7 +65,11 @@ public class ViewModel : IViewModel
     public bool TestRelayState
     {
         get => _stateMediator.Relays.TestRelay;
-        set => _stateMediator.Relays.TestRelay = value;
+        set
+        {
+            _stateMediator.Relays.TestRelay = value;
+            Task.Run(() => _stateMediator.PersistIfChange()).Wait();
+        }
     }
 
 

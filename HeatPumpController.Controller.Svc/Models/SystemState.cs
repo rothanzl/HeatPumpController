@@ -4,10 +4,9 @@ namespace HeatPumpController.Controller.Svc.Models;
 
 public class SystemState
 {
-    public DateTime SavedAt { get; set; }
-
+    public const string Name = "SystemState_v1";
+    
     public SetPointTemperatures SetPointTemperatures { get; set; } = new (40, 24);
-    public CurrentTemperatures CurrentTemperatures { get; set; } = new(0, 0, 0);
     public RelayState RelayState { get; init; } = new();
 
 }

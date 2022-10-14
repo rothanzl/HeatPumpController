@@ -5,57 +5,50 @@ public interface IPersistentStateMediator
 {
     SetPointTemperatures SetPointTemperatures { get; }
     Task SetSetPointTemperatures(SetPointTemperatures temperatures);
-    CurrentTemperatures CurrentTemperatures { get; }
+    CurrentTemperatures CurrentTemperatures { get; set; }
     RelayState Relays { get; }
-    Task SetCurrentTemperatures(CurrentTemperatures temperatures);
-    Task PersistIfTimeout(DateTime now);
 
     event CurrentValuesChangedHandler CurrentValuesChanged;
     public delegate void CurrentValuesChangedHandler();
+
+    Task PersistIfChange();
 }
 
 public class PersistentStateMediator : IPersistentStateMediator
 {
     private readonly IPersistentContext<SystemState> _persistence;
     
-    public PersistentStateMediator(IPersistentContext<SystemState> persistence)
+    public PersistentStateMediator()
     {
-        _persistence = persistence;
+        _persistence = new PersistentContext<SystemState>(SystemState.Name);
     }
 
     public SetPointTemperatures SetPointTemperatures
         => _persistence.State.SetPointTemperatures;
 
+
+    private CurrentTemperatures _currentTemperatures = new (0, 0, 0);
     public CurrentTemperatures CurrentTemperatures
-        => _persistence.State.CurrentTemperatures;
+    {
+        get => _currentTemperatures;
+        set
+        {
+            _currentTemperatures = value;
+            CurrentValuesChanged?.Invoke();
+        }
+    }
 
     public RelayState Relays => _persistence.State.RelayState;
-
-    public async Task SetCurrentTemperatures(CurrentTemperatures temperatures)
-    {
-        _persistence.State.CurrentTemperatures = temperatures;
-        await _persistence.WriteIfChange();
-        CurrentValuesChanged?.Invoke();
-    }
 
     public async Task SetSetPointTemperatures(SetPointTemperatures temperatures)
     {
         _persistence.State.SetPointTemperatures = temperatures;
         await _persistence.WriteIfChange();
     }
-        
-
-
-    public Task PersistIfTimeout(DateTime now)
-    {
-        if (_persistence.State.SavedAt + TimeSpan.FromMinutes(1) < now)
-        {
-            _persistence.State.SavedAt = now;
-            return _persistence.WriteIfChange();            
-        }
-        
-        return Task.CompletedTask;
-    }
 
     public event IPersistentStateMediator.CurrentValuesChangedHandler? CurrentValuesChanged;
+    public Task PersistIfChange()
+    {
+        return _persistence.WriteIfChange();
+    }
 }

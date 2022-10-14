@@ -95,8 +95,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         var temperatures = await resources.GetTemperatures(ct);
         
 
-        await _stateMediator.SetCurrentTemperatures(new CurrentTemperatures(
-            temperatures.TOut, temperatures.TWather, temperatures.THeatherBack));
+        _stateMediator.CurrentTemperatures = new CurrentTemperatures(
+            temperatures.TOut, temperatures.TWather, temperatures.THeatherBack);
 
         
         // Evaluate
@@ -109,7 +109,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
 
 
         // Persist
-        await _stateMediator.PersistIfTimeout(now);
+        await _stateMediator.PersistIfChange();
         
         
         // Sleep
