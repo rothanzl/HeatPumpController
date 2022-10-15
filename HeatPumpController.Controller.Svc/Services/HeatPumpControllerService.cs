@@ -2,7 +2,7 @@ using System.Diagnostics;
 using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Technology;
-using HeatPumpController.Controller.Svc.Technology.Relay;
+using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
 
 namespace HeatPumpController.Controller.Svc.Services;
 
@@ -73,14 +73,36 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
-    private readonly TestRelay _testRelay;
 
-    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, ILogger<ServiceLoopIteration> logger, TestRelay testRelay)
+    private readonly IRelayHeatingCircuitBathRoom _heatingCircuitBathRoomRelay;
+    private readonly IRelayHeatingCircuitBathRoomWall _heatingCircuitBathRoomWallRelay;
+    private readonly IRelayHeatingCircuitBedRoom _heatingCircuitBedRoomRelay;
+    private readonly IRelayHeatingCircuitKitchen _heatingCircuitKitchenRelay;
+    private readonly IRelayHeatingCircuitLivingRoom _heatingCircuitLivingRoomRelay;
+    private readonly IRelayHeatingCircuitSmallRoom _heatingCircuitSmallRoomRelay;
+    private readonly IRelayHeatPump _heatPumpRelay;
+    private readonly IRelayLowerValve _lowerValveRelay;
+    private readonly IRelayUpperValve _upperValveRelay;
+
+    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, 
+        ILogger<ServiceLoopIteration> logger, IRelayHeatingCircuitBathRoom heatingCircuitBathRoomRelay, 
+        IRelayHeatingCircuitBathRoomWall heatingCircuitBathRoomWallRelay, IRelayHeatingCircuitBedRoom heatingCircuitBedRoomRelay, 
+        IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
+        IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
+        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
         _logger = logger;
-        _testRelay = testRelay;
+        _heatingCircuitBathRoomRelay = heatingCircuitBathRoomRelay;
+        _heatingCircuitBathRoomWallRelay = heatingCircuitBathRoomWallRelay;
+        _heatingCircuitBedRoomRelay = heatingCircuitBedRoomRelay;
+        _heatingCircuitKitchenRelay = heatingCircuitKitchenRelay;
+        _heatingCircuitLivingRoomRelay = heatingCircuitLivingRoomRelay;
+        _heatingCircuitSmallRoomRelay = heatingCircuitSmallRoomRelay;
+        _heatPumpRelay = heatPumpRelay;
+        _lowerValveRelay = lowerValveRelay;
+        _upperValveRelay = upperValveRelay;
     }
     
     
@@ -103,8 +125,15 @@ public class ServiceLoopIteration : IServiceLoopIteration
         
         
         // Act
-        _testRelay.Set(_stateMediator.Relays.TestRelay);
-
+        _heatingCircuitBathRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomRelay);
+        _heatingCircuitBathRoomWallRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomWallRelay);
+        _heatingCircuitBedRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBedRoomRelay);
+        _heatingCircuitKitchenRelay.Set(_stateMediator.Relays.HeatingCircuitKitchenRelay);
+        _heatingCircuitLivingRoomRelay.Set(_stateMediator.Relays.HeatingCircuitLivingRoomRelay);
+        _heatingCircuitSmallRoomRelay.Set(_stateMediator.Relays.HeatingCircuitSmallRoomRelay);
+        _heatPumpRelay.Set(_stateMediator.Relays.HeatPumpRelay);
+        _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
+        _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
 
 
 

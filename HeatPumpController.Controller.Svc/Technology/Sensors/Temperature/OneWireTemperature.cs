@@ -2,7 +2,7 @@ using HeatPumpController.Controller.Svc.Config;
 using Iot.Device.OneWire;
 using Microsoft.Extensions.Options;
 
-namespace HeatPumpController.Controller.Svc.Technology.Temperature;
+namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
 public interface IOneWireTemperature : ITemperatureDevice
 {

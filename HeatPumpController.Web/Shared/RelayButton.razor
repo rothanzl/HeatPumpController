@@ -1,0 +1,65 @@
+@using HeatPumpController.Web.Services
+@using System.Reflection
+@inject IViewModel ViewModel
+@implements IDisposable
+
+<div class="row">
+    <div class="col">
+        <p>
+            <button @onclick="OnButtonClick" disabled="@ButtonDisabled">@ButtonText</button>
+        </p>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string ParameterName { get; init; } = "";
+
+    private string ButtonText { get; set; } = "";
+
+    private Action OnButtonClick { get; set; } = () => { };
+
+    private bool ButtonDisabled => ViewModel.Automation;
+    private PropertyInfo propertyInfo { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        ViewModel.DataChanged += AutomationStateChanged;
+        
+        propertyInfo = ViewModel.GetType().GetProperty(ParameterName);
+        if (propertyInfo == null)
+            throw new NullReferenceException("Cannot find property " + ParameterName);
+
+        var value = (bool)propertyInfo.GetValue(ViewModel)!;
+        SetButtonText(value);
+
+        OnButtonClick = () =>
+        {
+            var v = !(bool)propertyInfo.GetValue(ViewModel)!;
+            propertyInfo.SetValue(ViewModel, v);
+            SetButtonText(v);
+        };
+        
+        
+        base.OnParametersSet();
+    }
+
+    private void SetButtonText(bool set)
+    {
+        ButtonText = ParameterName + " " + (set ? "Closed" : "Open");
+    }
+    
+    private void AutomationStateChanged()
+    {
+        var value = (bool)propertyInfo.GetValue(ViewModel);
+        SetButtonText(value);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        ViewModel.DataChanged -= AutomationStateChanged;
+    }
+
+}

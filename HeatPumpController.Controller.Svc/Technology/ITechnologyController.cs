@@ -1,4 +1,4 @@
-using HeatPumpController.Controller.Svc.Technology.Temperature;
+using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
 namespace HeatPumpController.Controller.Svc.Technology;
 

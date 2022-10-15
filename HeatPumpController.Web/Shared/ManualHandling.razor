@@ -1,0 +1,42 @@
+@using HeatPumpController.Web.Services
+@inject IViewModel ViewModel
+@implements IDisposable
+
+<h3>Mode: @AutomationState</h3>
+
+<div class="row">
+    <div class="col">
+        <p>
+            <button @onclick="ModeChangeButtonClick">@ModeChangeButtonText</button>
+        </p>
+    </div>
+</div>
+
+<RelayButton ParameterName="@nameof(ViewModel.HeatPumpRelay)"/>
+<RelayButton ParameterName="@nameof(ViewModel.UpperValveRelay)"/>
+<RelayButton ParameterName="@nameof(ViewModel.LowerValveRelay)"/>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        ViewModel.DataChanged += DataChangedHandler;
+        base.OnInitialized();
+    }
+
+    private string AutomationState => ViewModel.Automation ? "Automation" : "Manual";
+    private string ModeChangeButtonText => ViewModel.Automation ? "Manual" : "Automate";
+    private void ModeChangeButtonClick()
+    {
+        ViewModel.Automation = !ViewModel.Automation;
+    }
+
+    private void DataChangedHandler() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        ViewModel.DataChanged -= DataChangedHandler;
+
+    }
+
+}

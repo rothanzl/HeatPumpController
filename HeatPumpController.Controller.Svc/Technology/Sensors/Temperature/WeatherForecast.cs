@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using HeatPumpController.Controller.Svc.Config;
 using Microsoft.Extensions.Options;
 
-namespace HeatPumpController.Controller.Svc.Technology.Temperature;
+namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
 public interface IWeatherForecast : ITemperatureDevice
 {

@@ -7,6 +7,7 @@ public interface IPersistentStateMediator
     Task SetSetPointTemperatures(SetPointTemperatures temperatures);
     CurrentTemperatures CurrentTemperatures { get; set; }
     RelayState Relays { get; }
+    ProcessState ProcessState { get; }
 
     event CurrentValuesChangedHandler CurrentValuesChanged;
     public delegate void CurrentValuesChangedHandler();
@@ -39,6 +40,7 @@ public class PersistentStateMediator : IPersistentStateMediator
     }
 
     public RelayState Relays => _persistence.State.RelayState;
+    public ProcessState ProcessState => _persistence.State.ProcessState;
 
     public async Task SetSetPointTemperatures(SetPointTemperatures temperatures)
     {
