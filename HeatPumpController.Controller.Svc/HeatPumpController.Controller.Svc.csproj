@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <Folder Include="Technology\Actuators" />
-      <Folder Include="Technology\Sensors" />
     </ItemGroup>
 
 

@@ -32,6 +32,8 @@ public class WeatherForecast : IWeatherForecast
         _apiKey = config.Value.WeatherForecastApiKey;
         _logger = logger;
         DummyTechnology = config.Value.DummyTechnology;
+        
+        Value = SensorValue.CreateInvalid();
     }
 
     public Task ReadAsync()
@@ -50,7 +52,7 @@ public class WeatherForecast : IWeatherForecast
 
     private Task SetDummyValue()
     {
-        Value = new Random().NextSingle() * 50;
+        Value = SensorValue.CreateValid(new Random().NextSingle() * 50);
         return Task.CompletedTask;
     }
 
@@ -83,16 +85,16 @@ public class WeatherForecast : IWeatherForecast
             if (responseObject == null)
             {
                 _logger.LogError("Error pare response object");
-                Value = default;
+                Value = SensorValue.CreateInvalid();
             }
             else
             {
-                Value = responseObject.Current.Temp;
+                Value = SensorValue.CreateValid(responseObject.Current.Temp);
             }
         }
         catch (Exception e)
         {
-            Value = default;
+            Value = SensorValue.CreateInvalid();
             _logger.LogError(e, "Error get forecast");
         }
         finally
@@ -104,7 +106,7 @@ public class WeatherForecast : IWeatherForecast
     
     
 
-    public float Value { get; private set; }
+    public SensorValue Value { get; private set; }
 
 
     private class ResponseObject

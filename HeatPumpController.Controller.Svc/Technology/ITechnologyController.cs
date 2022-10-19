@@ -55,9 +55,9 @@ public class TechnologyResources : ITechnologyResources
         
         
         return new Temperatures( 
-             _weatherForecast.Value, 
-             _waterTemperatureDevice.Value,
-             _heatherBackTemperatureDevice.Value);
+             _weatherForecast.Value.Value, 
+             _waterTemperatureDevice.Value.Value,
+             _heatherBackTemperatureDevice.Value.Value);
     }
 
     public ValueTask DisposeAsync()

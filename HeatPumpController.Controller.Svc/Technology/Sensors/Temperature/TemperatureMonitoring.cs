@@ -16,8 +16,15 @@ public class TemperatureMonitoring
         };
     }
 
-    public void Set(float value)
+    public void Set(SensorValue value)
     {
-        Infrastructure.Monitoring.SetGaugeValue(Name, _labels, value);
+        if (value.Valid)
+        {
+            Infrastructure.Monitoring.SetGaugeValue(Name, _labels, value.Value);
+        }
+        else
+        {
+            Infrastructure.Monitoring.UnpublishGauge(Name, _labels.Keys.ToArray());
+        }
     }
 }

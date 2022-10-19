@@ -9,6 +9,20 @@ public static class Monitoring
 
     private static readonly object GaugesLocker = new();
 
+    public static void UnpublishGauge(string name, string[]? labelNames)
+    {
+        var metric = GetGauge(name, labelNames);
+
+        if (labelNames != null && labelNames.Length > 0)
+        {
+            metric.RemoveLabelled(labelNames);
+        }
+        else
+        {
+            metric.Unpublish();
+        }
+    }
+    
     public static void SetGaugeValue(string name, Dictionary<string, string>? labels, double value)
     {
         var labelNames = labels?.Keys.ToArray();
