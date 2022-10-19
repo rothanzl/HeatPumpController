@@ -73,6 +73,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
+    private readonly IGarbageCollector _garbageCollector;
 
     private readonly IRelayHeatingCircuitBathRoom _heatingCircuitBathRoomRelay;
     private readonly IRelayHeatingCircuitBathRoomWall _heatingCircuitBathRoomWallRelay;
@@ -89,7 +90,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayHeatingCircuitBathRoomWall heatingCircuitBathRoomWallRelay, IRelayHeatingCircuitBedRoom heatingCircuitBedRoomRelay, 
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
-        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay)
+        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IGarbageCollector garbageCollector)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
@@ -103,6 +104,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _heatPumpRelay = heatPumpRelay;
         _lowerValveRelay = lowerValveRelay;
         _upperValveRelay = upperValveRelay;
+        _garbageCollector = garbageCollector;
     }
     
     
@@ -135,6 +137,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
         _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
 
+        _garbageCollector.Trigger();
 
 
         // Persist
