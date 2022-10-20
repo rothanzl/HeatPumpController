@@ -6,60 +6,60 @@ using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
 
 namespace HeatPumpController.Controller.Svc.Services;
 
-public class HeatPumpControllerService : IHostedService
+public class HeatPumpControllerService : IHostedService, IDisposable
 {
-    private Task? _loopTask;
     private readonly IServiceLoopIteration _serviceLoopIteration;
     private readonly ILogger<HeatPumpControllerService> _logger;
-    private readonly CancellationTokenSource _cts;
+
+    private Timer? _timer = null;
+    private TimeSpan TimerPeriod { get; } = TimeSpan.FromSeconds(1);
 
 
     public HeatPumpControllerService(IServiceLoopIteration serviceLoopIteration, ILogger<HeatPumpControllerService> logger)
     {
         _serviceLoopIteration = serviceLoopIteration;
         _logger = logger;
-
-        _cts = new CancellationTokenSource();
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _loopTask = ServiceLoop(_cts.Token);
+        _timer = new Timer(DoWord, null, TimerPeriod, TimerPeriod);
         return Task.CompletedTask;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(CancellationToken cancellationToken)
     {
-        _cts.Cancel();
-        
-        while (_loopTask is { IsCompleted: false })
-        {
-            await Task.Delay(100);
-        }
-        
+        _timer?.Change(Timeout.Infinite, 0);
         _logger.LogInformation("Service stopped");
+        return Task.CompletedTask;
     }
 
-    private async Task ServiceLoop(CancellationToken ct)
+    private async void DoWord(object? o)
     {
-        while (!ct.IsCancellationRequested)
+        Stopwatch sw = Stopwatch.StartNew();
+        try
         {
-            try
-            {
-                await _serviceLoopIteration.Run(ct);
-            }
-            catch (TaskCanceledException)
-            {
-                _logger.LogInformation("Service cancelled");
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Service loop error");
-            }finally
-            {
-                await _serviceLoopIteration.DisposeAsync();
-            }
+            await _serviceLoopIteration.Run(CancellationToken.None);
         }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Service loop exception");
+        }
+        
+        sw.Stop();
+        if (sw.Elapsed >= TimerPeriod / 2)
+        {
+            _logger.LogWarning("Service loop took {Elapse}", sw.Elapsed.ToString());
+        }
+        else if (sw.Elapsed >= TimerPeriod)
+        {
+            _logger.LogError("Service loop took {Elapse}", sw.Elapsed.ToString());
+        }
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
     }
 }
 
@@ -73,7 +73,6 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
-    private readonly IGarbageCollector _garbageCollector;
 
     private readonly IRelayHeatingCircuitBathRoom _heatingCircuitBathRoomRelay;
     private readonly IRelayHeatingCircuitBathRoomWall _heatingCircuitBathRoomWallRelay;
@@ -90,7 +89,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayHeatingCircuitBathRoomWall heatingCircuitBathRoomWallRelay, IRelayHeatingCircuitBedRoom heatingCircuitBedRoomRelay, 
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
-        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IGarbageCollector garbageCollector)
+        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
@@ -104,7 +103,6 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _heatPumpRelay = heatPumpRelay;
         _lowerValveRelay = lowerValveRelay;
         _upperValveRelay = upperValveRelay;
-        _garbageCollector = garbageCollector;
     }
     
     
@@ -137,18 +135,9 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
         _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
 
-        //_garbageCollector.Trigger();
-
 
         // Persist
         await _stateMediator.PersistIfChange();
-        
-        
-        // Sleep
-        sw.Stop();
-        var sleepTime = TimeSpan.FromSeconds(1) - sw.Elapsed;
-        if(sleepTime > TimeSpan.Zero)
-            await Task.Delay(sleepTime, ct);
     }
 
     public ValueTask DisposeAsync()
