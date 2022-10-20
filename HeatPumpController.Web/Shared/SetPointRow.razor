@@ -10,9 +10,9 @@
     </div>
     <div class="col-4">
         <p>
-            <button class="btn btn-primary btn-sm" @onclick="Decrement" disabled="@Editable">Minus</button>
+            <button class="btn btn-primary btn-sm" @onclick="Decrement" disabled="@Disabled">Minus</button>
             @SetPointValue
-            <button class="btn btn-primary btn-sm" @onclick="Increment" disabled="@Editable">Plus</button>
+            <button class="btn btn-primary btn-sm" @onclick="Increment" disabled="@Disabled">Plus</button>
         </p>
     </div>
 </div>
@@ -28,7 +28,7 @@
     private string SetPointValue => SetPoint.SetPointValue.ToString("F1");
     private string CurrentValue => SetPoint.Value.ToString("F1");
     private string Name => SetPoint.Name;
-    private bool Editable => SetPoint.Editable;
+    private bool Disabled => !SetPoint.Editable;
 
     [Parameter]
     public SetPoint SetPoint { get; set; }

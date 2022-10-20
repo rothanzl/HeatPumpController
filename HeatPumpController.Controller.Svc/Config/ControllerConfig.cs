@@ -19,12 +19,24 @@ public class ControllerConfig
         BusId = "w1_bus_master1",
         DeviceId = "28-0214811c4bff"
     };
-    
-    
+
+    public TechnologyConfig TechnologyConfig { get; init; } = new();
+
 }
 
 public class OneWireDeviceConfig
 {
     public string BusId { get; init; } = string.Empty;
     public string DeviceId { get; init; } = string.Empty;
+}
+
+public class TechnologyConfig
+{
+    public TechnologyTemperatureToleranceConfig TemperatureTolerance { get; init; } = new();
+}
+
+public class TechnologyTemperatureToleranceConfig
+{
+    public float LowerTolerance { get; init; } = 1;
+    public float UpperTolerance { get; init; } = 1;
 }

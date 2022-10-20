@@ -9,6 +9,7 @@ public interface IViewModel : IDisposable, IRelayState, IProcessState
     SetPoint HeaterTemperature { get; }
     Measurement OutTemperature { get; }
     DateTime CurrentTime { get; }
+    ProcessStateEnum ProcessState { get; }
 
     event Measurement.DataChangedHandler DataChanged;
 }
@@ -26,10 +27,7 @@ public class ViewModel : IViewModel
         var setPointTemps = _stateMediator.SetPointTemperatures;
 
         WaterTemperature = new SetPoint("Teplota vody", currTemps.WaterTemperature, setPointTemps.WaterTemperature);
-        HeaterTemperature = new SetPoint("Teplota topení", currTemps.HeatingTemperature, setPointTemps.HeatingTemperature)
-            {
-                Editable = false
-            };
+        HeaterTemperature = new SetPoint("Teplota topení", currTemps.HeatingTemperature, setPointTemps.HeatingTemperature);
         OutTemperature = new Measurement("Venkovní teplota", currTemps.OutTemperature);
 
         WaterTemperature.SetPointValueChanged += SetPointValuesChangedHandler;
@@ -52,7 +50,8 @@ public class ViewModel : IViewModel
         
         DataChanged?.Invoke();
     }
-    
+
+    public ProcessStateEnum ProcessState => _stateMediator.ProcessState.State;
     public event Measurement.DataChangedHandler DataChanged;
 
     public SetPoint WaterTemperature { get; }
@@ -172,6 +171,20 @@ public class ViewModel : IViewModel
             Task.Run(() => _stateMediator.PersistIfChange()).Wait();
             DataChanged?.Invoke();
         } 
+    }
+
+    public bool ExtraHeatingRelay
+    {
+        get => _stateMediator.Relays.ExtraHeatingRelay;
+        set
+        {
+            if (_stateMediator.ProcessState.Automation)
+                return;
+
+            _stateMediator.Relays.ExtraHeatingRelay = value;
+            Task.Run(() => _stateMediator.PersistIfChange()).Wait();
+            DataChanged?.Invoke();
+        }
     }
 
     public bool Automation {

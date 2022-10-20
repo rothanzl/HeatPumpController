@@ -23,6 +23,7 @@ public interface IRelayState
     bool LowerValveRelay { get; set; }
     bool UpperValveRelay { get; set; }
     bool HeatPumpRelay { get; set; }
+    bool ExtraHeatingRelay { get; set; }
 }
 
 public class RelayState : IRelayState
@@ -36,6 +37,7 @@ public class RelayState : IRelayState
     public bool LowerValveRelay { get; set; }
     public bool UpperValveRelay { get; set; }
     public bool HeatPumpRelay { get; set; }
+    public bool ExtraHeatingRelay { get; set; }
 }
 
 public interface IProcessState
@@ -46,4 +48,11 @@ public interface IProcessState
 public class ProcessState : IProcessState
 {
     public bool Automation { get; set; }
+    public ProcessStateEnum State { get; set; } = ProcessStateEnum.DoNothing;
+}
+
+public enum ProcessStateEnum
+{
+    DoNothing,
+    HeatWaterReservoir
 }

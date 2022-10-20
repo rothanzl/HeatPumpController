@@ -28,7 +28,8 @@ public static class ServiceDiRegister
         services.AddSingleton<IRelayHeatingCircuitKitchen, RelayHeatingCircuitKitchen>();
         services.AddSingleton<IRelayHeatingCircuitLivingRoom, RelayHeatingCircuitLivingRoom>();
         services.AddSingleton<IRelayExtraHeating, RelayExtraHeating>();
-
+        services.AddSingleton<ITechnologyService, TechnologyService>();
+        
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         
         services.AddHostedService<HeatPumpControllerService>();

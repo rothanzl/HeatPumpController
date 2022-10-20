@@ -3,6 +3,7 @@ namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentStateMediator
 {
+    void StateChanged();
     SetPointTemperatures SetPointTemperatures { get; }
     Task SetSetPointTemperatures(SetPointTemperatures temperatures);
     CurrentTemperatures CurrentTemperatures { get; set; }
@@ -22,6 +23,11 @@ public class PersistentStateMediator : IPersistentStateMediator
     public PersistentStateMediator()
     {
         _persistence = new PersistentContext<SystemState>(SystemState.Name);
+    }
+
+    public void StateChanged()
+    {
+        CurrentValuesChanged?.Invoke();
     }
 
     public SetPointTemperatures SetPointTemperatures

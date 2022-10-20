@@ -83,13 +83,16 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly IRelayHeatPump _heatPumpRelay;
     private readonly IRelayLowerValve _lowerValveRelay;
     private readonly IRelayUpperValve _upperValveRelay;
+    private readonly IRelayExtraHeating _extraHeatingRelay;
+    private readonly ITechnologyService _technologyService;
 
     public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, 
         ILogger<ServiceLoopIteration> logger, IRelayHeatingCircuitBathRoom heatingCircuitBathRoomRelay, 
         IRelayHeatingCircuitBathRoomWall heatingCircuitBathRoomWallRelay, IRelayHeatingCircuitBedRoom heatingCircuitBedRoomRelay, 
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
-        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay)
+        IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
+        ITechnologyService technologyService)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
@@ -103,12 +106,13 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _heatPumpRelay = heatPumpRelay;
         _lowerValveRelay = lowerValveRelay;
         _upperValveRelay = upperValveRelay;
+        _extraHeatingRelay = extraHeatingRelay;
+        _technologyService = technologyService;
     }
     
     
     public async Task Run(CancellationToken ct)
     {
-
         var sw = Stopwatch.StartNew();
         var now = DateTime.Now;
         
@@ -119,9 +123,9 @@ public class ServiceLoopIteration : IServiceLoopIteration
 
         _stateMediator.CurrentTemperatures = new CurrentTemperatures(
             temperatures.TOut, temperatures.TWather, temperatures.THeatherBack);
-
         
         // Evaluate
+        _technologyService.Evaluate(temperatures);
         
         
         // Act
@@ -134,6 +138,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _heatPumpRelay.Set(_stateMediator.Relays.HeatPumpRelay);
         _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
         _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
+        _extraHeatingRelay.Set(_stateMediator.Relays.ExtraHeatingRelay);
 
 
         // Persist

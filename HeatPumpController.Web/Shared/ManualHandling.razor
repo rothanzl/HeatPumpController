@@ -3,6 +3,7 @@
 @implements IDisposable
 
 <h3>Mode: @AutomationState</h3>
+<p>@ProcessState</p>
 
 <div class="row">
     <div class="col">
@@ -26,6 +27,9 @@
 
     private string AutomationState => ViewModel.Automation ? "Automation" : "Manual";
     private string ModeChangeButtonText => ViewModel.Automation ? "Manual" : "Automate";
+
+    private string ProcessState => ViewModel.ProcessState.ToString();
+    
     private void ModeChangeButtonClick()
     {
         ViewModel.Automation = !ViewModel.Automation;
