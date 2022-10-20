@@ -112,109 +112,15 @@ public class WeatherForecast : IWeatherForecast
     private class ResponseObject
     {
         
-        // Root myDeserializedClass = JsonSerializer.Deserialize<Root>(myJsonResponse);
-    public record Current(
-        [property: JsonPropertyName("dt")] int Dt,
-        [property: JsonPropertyName("sunrise")] int Sunrise,
-        [property: JsonPropertyName("sunset")] int Sunset,
-        [property: JsonPropertyName("temp")] float Temp,
-        [property: JsonPropertyName("feels_like")] double FeelsLike,
-        [property: JsonPropertyName("pressure")] int Pressure,
-        [property: JsonPropertyName("humidity")] int Humidity,
-        [property: JsonPropertyName("dew_point")] double DewPoint,
-        [property: JsonPropertyName("uvi")] double Uvi,
-        [property: JsonPropertyName("clouds")] int Clouds,
-        [property: JsonPropertyName("visibility")] int Visibility,
-        [property: JsonPropertyName("wind_speed")] double WindSpeed,
-        [property: JsonPropertyName("wind_deg")] int WindDeg,
-        [property: JsonPropertyName("weather")] IReadOnlyList<Weather> Weather
-    );
-
-    public record Daily(
-        [property: JsonPropertyName("dt")] int Dt,
-        [property: JsonPropertyName("sunrise")] int Sunrise,
-        [property: JsonPropertyName("sunset")] int Sunset,
-        [property: JsonPropertyName("moonrise")] int Moonrise,
-        [property: JsonPropertyName("moonset")] int Moonset,
-        [property: JsonPropertyName("moon_phase")] double MoonPhase,
-        [property: JsonPropertyName("temp")] Temp Temp,
-        [property: JsonPropertyName("feels_like")] FeelsLike FeelsLike,
-        [property: JsonPropertyName("pressure")] int Pressure,
-        [property: JsonPropertyName("humidity")] int Humidity,
-        [property: JsonPropertyName("dew_point")] double DewPoint,
-        [property: JsonPropertyName("wind_speed")] double WindSpeed,
-        [property: JsonPropertyName("wind_deg")] int WindDeg,
-        [property: JsonPropertyName("wind_gust")] double WindGust,
-        [property: JsonPropertyName("weather")] IReadOnlyList<Weather> Weather,
-        [property: JsonPropertyName("clouds")] int Clouds,
-        [property: JsonPropertyName("pop")] double Pop,
-        [property: JsonPropertyName("uvi")] double Uvi,
-        [property: JsonPropertyName("rain")] double? Rain
-    );
-
-    public record FeelsLike(
-        [property: JsonPropertyName("day")] double Day,
-        [property: JsonPropertyName("night")] double Night,
-        [property: JsonPropertyName("eve")] double Eve,
-        [property: JsonPropertyName("morn")] double Morn
-    );
-
-    public record Hourly(
-        [property: JsonPropertyName("dt")] int Dt,
-        [property: JsonPropertyName("temp")] double Temp,
-        [property: JsonPropertyName("feels_like")] double FeelsLike,
-        [property: JsonPropertyName("pressure")] int Pressure,
-        [property: JsonPropertyName("humidity")] int Humidity,
-        [property: JsonPropertyName("dew_point")] double DewPoint,
-        [property: JsonPropertyName("uvi")] double Uvi,
-        [property: JsonPropertyName("clouds")] int Clouds,
-        [property: JsonPropertyName("visibility")] int Visibility,
-        [property: JsonPropertyName("wind_speed")] double WindSpeed,
-        [property: JsonPropertyName("wind_deg")] int WindDeg,
-        [property: JsonPropertyName("wind_gust")] double WindGust,
-        [property: JsonPropertyName("weather")] IReadOnlyList<Weather> Weather,
-        [property: JsonPropertyName("pop")] double Pop,
-        [property: JsonPropertyName("rain")] Rain Rain
-    );
-
-    public record Minutely(
-        [property: JsonPropertyName("dt")] int Dt,
-        [property: JsonPropertyName("precipitation")] float Precipitation
-    );
-
-    public record Rain(
-        [property: JsonPropertyName("1h")] double _1h
-    );
-
-    public record Root(
-        [property: JsonPropertyName("lat")] double Lat,
-        [property: JsonPropertyName("lon")] double Lon,
-        [property: JsonPropertyName("timezone")] string Timezone,
-        [property: JsonPropertyName("timezone_offset")] int TimezoneOffset,
-        [property: JsonPropertyName("current")] Current Current,
-        [property: JsonPropertyName("minutely")] IReadOnlyList<Minutely> Minutely,
-        [property: JsonPropertyName("hourly")] IReadOnlyList<Hourly> Hourly,
-        [property: JsonPropertyName("daily")] IReadOnlyList<Daily> Daily
-    );
-
-    public record Temp(
-        [property: JsonPropertyName("day")] double Day,
-        [property: JsonPropertyName("min")] double Min,
-        [property: JsonPropertyName("max")] double Max,
-        [property: JsonPropertyName("night")] double Night,
-        [property: JsonPropertyName("eve")] double Eve,
-        [property: JsonPropertyName("morn")] double Morn
-    );
-
-    public record Weather(
-        [property: JsonPropertyName("id")] int Id,
-        [property: JsonPropertyName("main")] string Main,
-        [property: JsonPropertyName("description")] string Description,
-        [property: JsonPropertyName("icon")] string Icon
-    );
-
-
-
+        public record Current
+        {
+            [JsonPropertyName("temp")] public float Temp { get; init; }
+        }
+        
+        public record Root
+        {
+            [JsonPropertyName("current")] public Current Current { get; init; } = new();
+        }
     
     }
 }

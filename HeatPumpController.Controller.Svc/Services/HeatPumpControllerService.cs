@@ -137,7 +137,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
         _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
 
-        _garbageCollector.Trigger();
+        //_garbageCollector.Trigger();
 
 
         // Persist
