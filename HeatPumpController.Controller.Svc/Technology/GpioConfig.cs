@@ -1,3 +1,5 @@
+using System.CodeDom;
+
 namespace HeatPumpController.Controller.Svc.Technology;
 
 public class GpioConfig
@@ -18,5 +20,7 @@ public class GpioConfig
         public const int HandleHeatingCircuitBedRoom = 8;
         public const int HandleHeatingCircuitKitchen = 7;
         public const int HandleHeatingCircuitLivingRoom = 1;
+
+        public const int HandleExtraHeating = 12;
     }
 }

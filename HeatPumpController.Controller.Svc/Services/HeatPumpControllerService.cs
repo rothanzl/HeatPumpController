@@ -12,7 +12,7 @@ public class HeatPumpControllerService : IHostedService, IDisposable
     private readonly ILogger<HeatPumpControllerService> _logger;
 
     private Timer? _timer = null;
-    private TimeSpan TimerPeriod { get; } = TimeSpan.FromSeconds(1);
+    private TimeSpan TimerPeriod { get; } = TimeSpan.FromSeconds(2.5);
 
 
     public HeatPumpControllerService(IServiceLoopIteration serviceLoopIteration, ILogger<HeatPumpControllerService> logger)

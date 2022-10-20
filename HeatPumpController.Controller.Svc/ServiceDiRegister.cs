@@ -27,6 +27,7 @@ public static class ServiceDiRegister
         services.AddSingleton<IRelayHeatingCircuitBedRoom, RelayHeatingCircuitBedRoom>();
         services.AddSingleton<IRelayHeatingCircuitKitchen, RelayHeatingCircuitKitchen>();
         services.AddSingleton<IRelayHeatingCircuitLivingRoom, RelayHeatingCircuitLivingRoom>();
+        services.AddSingleton<IRelayExtraHeating, RelayExtraHeating>();
 
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         
