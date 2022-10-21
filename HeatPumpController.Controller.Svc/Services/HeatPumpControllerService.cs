@@ -47,13 +47,13 @@ public class HeatPumpControllerService : IHostedService, IDisposable
         }
         
         sw.Stop();
-        if (sw.Elapsed >= TimerPeriod / 2)
-        {
-            _logger.LogWarning("Service loop took {Elapse}", sw.Elapsed.ToString());
-        }
-        else if (sw.Elapsed >= TimerPeriod)
+        if (sw.Elapsed >= TimerPeriod)
         {
             _logger.LogError("Service loop took {Elapse}", sw.Elapsed.ToString());
+        }
+        else if (sw.Elapsed >= TimerPeriod / 2)
+        {
+            _logger.LogWarning("Service loop took {Elapse}", sw.Elapsed.ToString());
         }
     }
 

@@ -1,4 +1,3 @@
-using System.CodeDom;
 
 namespace HeatPumpController.Controller.Svc.Technology;
 
@@ -10,6 +9,7 @@ public class GpioConfig
         public const int HdoInput = 2;
         public const int OneWireTemperatureSensors = 4;
         
+        // Right line  -  Top -> Down
         public const int HandleHeatPump = 14;
         public const int HandleUpperValve = 15;
         public const int HandleLowerValve = 18;
