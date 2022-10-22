@@ -27,8 +27,6 @@ public class MqttTemperatureMonitoring : TemperatureMonitoringBase
     
     public MqttTemperatureMonitoring(string topic)
     {
-        topic = topic.Replace("/", "-");
-        
         LabelsTemperature = new()
         {
             { Label, topic },
@@ -53,10 +51,10 @@ public class MqttTemperatureMonitoring : TemperatureMonitoringBase
 
     public void Set(SensorMessage message)
     {
-        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsTemperature, message.Temperature, MqttTemperatureSensorsHelper.Logger);
-        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsHumidity, message.Humidity, MqttTemperatureSensorsHelper.Logger);
-        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsLinkQuality, message.LinkQuality, MqttTemperatureSensorsHelper.Logger);
-        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsBattery, message.Battery, MqttTemperatureSensorsHelper.Logger);
+        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsTemperature, message.Temperature);
+        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsHumidity, message.Humidity);
+        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsLinkQuality, message.LinkQuality);
+        Infrastructure.Monitoring.SetGaugeValue(Name, LabelsBattery, message.Battery);
     }
 }
 

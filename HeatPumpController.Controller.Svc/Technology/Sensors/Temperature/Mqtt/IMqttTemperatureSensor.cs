@@ -14,8 +14,6 @@ public class MqttTemperatureSensorsHelper : IMqttTemperatureSensorsHelper
 {
     private readonly ILogger<MqttTemperatureSensorsHelper> _logger;
     private readonly IMqttTemperatureSensor[] _sensors;
-    
-    public static ILogger Logger { get; private set; } = NullLogger.Instance;
 
     public MqttTemperatureSensorsHelper(ILogger<MqttTemperatureSensorsHelper> logger, 
         IBathRoomTemperatureSensor s1,
@@ -26,7 +24,6 @@ public class MqttTemperatureSensorsHelper : IMqttTemperatureSensorsHelper
         )
     {
         _logger = logger;
-        Logger = logger;
         _sensors = new IMqttTemperatureSensor[] { s1, s2, s3, s4, s5 };
     }
 
