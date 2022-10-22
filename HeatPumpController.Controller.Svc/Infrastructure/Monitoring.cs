@@ -23,8 +23,10 @@ public static class Monitoring
         }
     }
     
-    public static void SetGaugeValue(string name, Dictionary<string, string>? labels, double value)
+    public static void SetGaugeValue(string name, Dictionary<string, string>? labels, double value, ILogger? logger = null)
     {
+        logger?.LogInformation("Gauge[{Name}] Labels[{Labels}]", name, labels == null ? null : string.Join(",", labels.Select(kv => kv.Key+":"+kv.Value)));
+        
         var labelNames = labels?.Keys.ToArray();
         var metric = GetGauge(name, labelNames);
 
