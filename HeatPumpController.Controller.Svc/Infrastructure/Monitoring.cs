@@ -49,7 +49,7 @@ public static class Monitoring
         
         lock (GaugesLocker)
         {
-            if (Gauges.TryGetValue(name, out var res))
+            if (Gauges.TryGetValue(GetDictName(name, labelNames), out var res))
                 return res;
 
             string metricName = NormalizeMetricName(name);
@@ -58,10 +58,13 @@ public static class Monitoring
                 LabelNames = labelNames
             });
             
-            Gauges.Add(name, res);
+            Gauges.Add(GetDictName(name, labelNames), res);
             return res;
         }
     }
+
+    private static string GetDictName(string name, string[] labelNames)
+        => name + string.Join("", labelNames);
     
     
     private static readonly Regex ValidNameRegex = new(@"[^a-zA-Z0-9_:]");
