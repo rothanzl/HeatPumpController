@@ -21,6 +21,18 @@ public class ControllerConfig
     };
 
     public TechnologyConfig TechnologyConfig { get; init; } = new();
+    public MqttConfig Mqtt { get; init; } = new();
+
+}
+
+public class MqttConfig
+{
+    public string BrokerAddress { get; init; } = String.Empty;
+    public bool Anonymous { get; init; }
+    public string UserName { get; init; } = String.Empty;
+    public string Password { get; init; } = String.Empty;
+
+    
 
 }
 

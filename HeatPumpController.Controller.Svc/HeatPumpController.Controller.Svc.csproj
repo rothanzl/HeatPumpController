@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <PackageReference Include="Iot.Device.Bindings" Version="2.2.0" />
+        <PackageReference Include="MQTTnet" Version="4.1.1.318" />
         <PackageReference Include="prometheus-net" Version="6.0.0" />
         <PackageReference Include="prometheus-net.AspNetCore" Version="6.0.0" />
         <PackageReference Include="System.Device.Gpio" Version="2.2.0" />

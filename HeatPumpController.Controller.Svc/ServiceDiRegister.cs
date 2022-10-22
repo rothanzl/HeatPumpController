@@ -4,6 +4,7 @@ using HeatPumpController.Controller.Svc.Services;
 using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
+using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
 
 namespace HeatPumpController.Controller.Svc;
 
@@ -29,10 +30,18 @@ public static class ServiceDiRegister
         services.AddSingleton<IRelayHeatingCircuitLivingRoom, RelayHeatingCircuitLivingRoom>();
         services.AddSingleton<IRelayExtraHeating, RelayExtraHeating>();
         services.AddSingleton<ITechnologyService, TechnologyService>();
+        services.AddSingleton<IMqttTemperatureSensorsHelper, MqttTemperatureSensorsHelper>();
+
+        services.AddSingleton<IBathRoomTemperatureSensor, BathRoomTemperatureSensor>();
+        services.AddSingleton<ISmallRoomTemperatureSensor, SmallRoomTemperatureSensor>();
+        services.AddSingleton<IBedRoomTemperatureSensor, BedRoomTemperatureSensor>();
+        services.AddSingleton<ILivingRoomTemperatureSensor, LivingRoomTemperatureSensor>();
+        services.AddSingleton<IKitchenTemperatureSensor, KitchenTemperatureSensor>();
         
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         
         services.AddHostedService<HeatPumpControllerService>();
+        services.AddHostedService<MqttService>();
         
         return services;
     }
