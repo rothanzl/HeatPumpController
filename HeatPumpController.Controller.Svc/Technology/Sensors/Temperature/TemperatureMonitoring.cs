@@ -5,7 +5,7 @@ namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
 public abstract class TemperatureMonitoringBase
 {
-    protected const string Name = "heatpump_temperature";
+    protected abstract string Name { get; }
     protected const string Label = "heatpump_device";
 
     protected void Unpublish(string[] labels)
@@ -17,6 +17,7 @@ public abstract class TemperatureMonitoringBase
 public class MqttTemperatureMonitoring : TemperatureMonitoringBase
 {
     private const string LabelUnit = "heatpump_unit";
+    protected override string Name { get; } = "room_temperature";
     
     private Dictionary<string, string> LabelsTemperature { get; }
     private Dictionary<string, string> LabelsHumidity { get; }
@@ -62,6 +63,7 @@ public class MqttTemperatureMonitoring : TemperatureMonitoringBase
 public class TemperatureMonitoring : TemperatureMonitoringBase
 {
     private Dictionary<string, string> Labels { get; }
+    protected override string Name { get; } = "heatpump_temperature";
 
     public TemperatureMonitoring(string labelTemperatureValue)
     {

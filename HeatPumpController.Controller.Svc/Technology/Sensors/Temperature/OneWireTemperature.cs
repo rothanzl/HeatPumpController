@@ -63,6 +63,7 @@ public abstract class OneWireTemperature : IOneWireTemperature
         if (DummyTechnology)
         {
             SetDummyValue();
+            Monitoring.Set(Value);
             return;
         }
         
