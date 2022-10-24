@@ -11,7 +11,7 @@ public class MqttTopics
     public const string TempLivingRoom = "zigbee2mqtt/TempSensor_LivingRoom";
     public const string TempSmallRoom = "zigbee2mqtt/TempSensor_SmallRoom";
     public const string TempBathRoom = "zigbee2mqtt/TempSensor_BathRoom";
-    public const string TempKitchen = "zigbee2mqtt/TempSensor_Room_XX";
+    public const string TempKitchen = "zigbee2mqtt/TempSensor_Kitchen";
     public const string TempBedRoom = "zigbee2mqtt/TempSensor_BedRoom";
 }
 

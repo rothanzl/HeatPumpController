@@ -25,26 +25,26 @@ public class MqttTemperatureMonitoring : TemperatureMonitoringBase
     private Dictionary<string, string> LabelsBattery { get; }
     
     
-    public MqttTemperatureMonitoring(string topic)
+    public MqttTemperatureMonitoring(string room)
     {
         LabelsTemperature = new()
         {
-            { Label, topic },
+            { Label, room },
             { LabelUnit, "temperature" }
         };
         LabelsHumidity = new()
         {
-            { Label, topic },
+            { Label, room },
             { LabelUnit, "humidity" }
         };
         LabelsLinkQuality = new()
         {
-            { Label, topic },
+            { Label, room },
             { LabelUnit, "link_quality" }
         };
         LabelsBattery = new()
         {
-            { Label, topic },
+            { Label, room },
             { LabelUnit, "battery" }
         };
     }

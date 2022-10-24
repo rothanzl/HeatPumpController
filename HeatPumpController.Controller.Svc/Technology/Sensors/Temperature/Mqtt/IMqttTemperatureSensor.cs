@@ -1,7 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using HeatPumpController.Controller.Svc.Services;
-using Microsoft.Extensions.Logging.Abstractions;
 
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
 
@@ -74,14 +73,22 @@ public interface IMqttTemperatureSensor
 
 public abstract class MqttTemperatureSensorBase : IMqttTemperatureSensor
 {
+    protected MqttTemperatureSensorBase(string topic)
+    {
+        Topic = topic;
+
+        var roomName = topic.Split("_")[1];
+        Monitoring = new(roomName);
+    }
+    
     public Task ConsumeMessage(SensorMessage message)
     {
         Monitoring.Set(message);
         return Task.CompletedTask;
     }
 
-    protected abstract MqttTemperatureMonitoring Monitoring { get; }
-    public abstract string Topic { get; }
+    private MqttTemperatureMonitoring Monitoring { get; }
+    public string Topic { get; }
 }
 
 public interface IBathRoomTemperatureSensor : IMqttTemperatureSensor{}
@@ -89,8 +96,10 @@ public interface IBathRoomTemperatureSensor : IMqttTemperatureSensor{}
 class BathRoomTemperatureSensor : MqttTemperatureSensorBase, IBathRoomTemperatureSensor
 {
     private const string TopicStatic = MqttTopics.TempBathRoom;
-    protected override MqttTemperatureMonitoring Monitoring { get; } = new(TopicStatic);
-    public override string Topic => TopicStatic;
+
+    public BathRoomTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 public interface ISmallRoomTemperatureSensor : IMqttTemperatureSensor{}
@@ -98,8 +107,10 @@ public interface ISmallRoomTemperatureSensor : IMqttTemperatureSensor{}
 class SmallRoomTemperatureSensor : MqttTemperatureSensorBase, ISmallRoomTemperatureSensor
 {
     private const string TopicStatic = MqttTopics.TempSmallRoom;
-    protected override MqttTemperatureMonitoring Monitoring { get; } = new(TopicStatic);
-    public override string Topic => TopicStatic;
+
+    public SmallRoomTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 public interface IBedRoomTemperatureSensor : IMqttTemperatureSensor{}
@@ -107,8 +118,10 @@ public interface IBedRoomTemperatureSensor : IMqttTemperatureSensor{}
 class BedRoomTemperatureSensor : MqttTemperatureSensorBase, IBedRoomTemperatureSensor
 {
     private const string TopicStatic = MqttTopics.TempBedRoom;
-    protected override MqttTemperatureMonitoring Monitoring { get; } = new(TopicStatic);
-    public override string Topic => TopicStatic;
+
+    public BedRoomTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 public interface ILivingRoomTemperatureSensor : IMqttTemperatureSensor{}
@@ -116,8 +129,10 @@ public interface ILivingRoomTemperatureSensor : IMqttTemperatureSensor{}
 class LivingRoomTemperatureSensor : MqttTemperatureSensorBase, ILivingRoomTemperatureSensor
 {
     private const string TopicStatic = MqttTopics.TempLivingRoom;
-    protected override MqttTemperatureMonitoring Monitoring { get; } = new(TopicStatic);
-    public override string Topic => TopicStatic;
+
+    public LivingRoomTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 public interface IKitchenTemperatureSensor : IMqttTemperatureSensor{}
@@ -125,8 +140,10 @@ public interface IKitchenTemperatureSensor : IMqttTemperatureSensor{}
 class KitchenTemperatureSensor : MqttTemperatureSensorBase, IKitchenTemperatureSensor
 {
     private const string TopicStatic = MqttTopics.TempKitchen;
-    protected override MqttTemperatureMonitoring Monitoring { get; } = new(TopicStatic);
-    public override string Topic => TopicStatic;
+
+    public KitchenTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 
