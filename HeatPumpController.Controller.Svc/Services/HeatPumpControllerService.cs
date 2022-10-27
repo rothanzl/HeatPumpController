@@ -129,16 +129,24 @@ public class ServiceLoopIteration : IServiceLoopIteration
         
         
         // Act
-        _heatingCircuitBathRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomRelay);
-        _heatingCircuitBathRoomWallRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomWallRelay);
-        _heatingCircuitBedRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBedRoomRelay);
-        _heatingCircuitKitchenRelay.Set(_stateMediator.Relays.HeatingCircuitKitchenRelay);
-        _heatingCircuitLivingRoomRelay.Set(_stateMediator.Relays.HeatingCircuitLivingRoomRelay);
-        _heatingCircuitSmallRoomRelay.Set(_stateMediator.Relays.HeatingCircuitSmallRoomRelay);
-        _heatPumpRelay.Set(_stateMediator.Relays.HeatPumpRelay);
-        _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
-        _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
-        _extraHeatingRelay.Set(_stateMediator.Relays.ExtraHeatingRelay);
+        try
+        {
+            _heatingCircuitBathRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomRelay);
+            _heatingCircuitBathRoomWallRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomWallRelay);
+            _heatingCircuitBedRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBedRoomRelay);
+            _heatingCircuitKitchenRelay.Set(_stateMediator.Relays.HeatingCircuitKitchenRelay);
+            _heatingCircuitLivingRoomRelay.Set(_stateMediator.Relays.HeatingCircuitLivingRoomRelay);
+            _heatingCircuitSmallRoomRelay.Set(_stateMediator.Relays.HeatingCircuitSmallRoomRelay);
+            _heatPumpRelay.Set(_stateMediator.Relays.HeatPumpRelay);
+            _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
+            _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
+            _extraHeatingRelay.Set(_stateMediator.Relays.ExtraHeatingRelay);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Cannot set relay");
+        }
+        
 
 
         // Persist
