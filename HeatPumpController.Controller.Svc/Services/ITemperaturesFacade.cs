@@ -62,7 +62,8 @@ public class TemperaturesFacade : ITemperaturesFacade
     
     private IDevice[] Devices { get; }
 
-    public Task ReadAll() => Task.WhenAll(Devices.Select(d => d.ReadAsync()));
+    //public Task ReadAll() => Task.WhenAll(Devices.Select(d => d.ReadAsync()));
+    public Task ReadAll() => Task.Run(() => Task.WaitAll(Devices.Select(d => d.ReadAsync()).ToArray()));
     public bool ReadFailed() => Devices.Any(d => d.ValidValue == false);
 
     public float WaterReservoir => _waterTemperatureDevice.Value.Value;
