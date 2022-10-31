@@ -49,6 +49,7 @@ public class ProcessState : IProcessState
 {
     public bool Automation { get; set; }
     public ProcessStateEnum State { get; set; } = ProcessStateEnum.DoNothing;
+    public DateTime ChangeTimeStamp { get; set; }
 }
 
 public enum ProcessStateEnum

@@ -50,6 +50,8 @@ public class WeatherForecast : IWeatherForecast
         return Task.CompletedTask;
     }
 
+    public bool ValidValue => Value.Valid;
+
     private Task SetDummyValue()
     {
         Value = AnalogSensorValue.CreateValid(new Random().NextSingle() * 50);

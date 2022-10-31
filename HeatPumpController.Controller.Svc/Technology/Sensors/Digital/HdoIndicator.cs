@@ -33,5 +33,7 @@ public class HdoIndicator : IHdoIndicator
         return Task.CompletedTask;
     }
 
+    public bool ValidValue => Value.Valid;
+
     public DigitalSensorValue Value { get; private set; } = DigitalSensorValue.CreateInvalid();
 }

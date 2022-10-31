@@ -82,6 +82,8 @@ public abstract class OneWireTemperature : IOneWireTemperature
         Monitoring.Set(Value);
     }
 
+    public bool ValidValue => Value.Valid;
+
     private void SetDummyValue()
     {
         Value = AnalogSensorValue.CreateValid(new Random().NextSingle() * 50);

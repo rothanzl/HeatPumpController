@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
-using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
@@ -12,7 +11,7 @@ public class HeatPumpControllerService : IHostedService, IDisposable
     private readonly IServiceLoopIteration _serviceLoopIteration;
     private readonly ILogger<HeatPumpControllerService> _logger;
 
-    private Timer? _timer = null;
+    private Timer? _timer;
     private TimeSpan TimerPeriod { get; } = TimeSpan.FromSeconds(2.5);
 
 
@@ -64,14 +63,13 @@ public class HeatPumpControllerService : IHostedService, IDisposable
     }
 }
 
-public interface IServiceLoopIteration : IAsyncDisposable
+public interface IServiceLoopIteration
 {
     Task Run(CancellationToken ct);
 }
 
 public class ServiceLoopIteration : IServiceLoopIteration
 {
-    private readonly ITechnologyController _technologyController;
     private readonly IPersistentStateMediator _stateMediator;
     private readonly ILogger<ServiceLoopIteration> _logger;
 
@@ -86,17 +84,17 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly IRelayUpperValve _upperValveRelay;
     private readonly IRelayExtraHeating _extraHeatingRelay;
     private readonly ITechnologyService _technologyService;
+    private readonly ITemperaturesFacade _temperatures;
     private readonly IHdoIndicator _hdoIndicator;
 
-    public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, 
+    public ServiceLoopIteration(IPersistentStateMediator stateMediator, 
         ILogger<ServiceLoopIteration> logger, IRelayHeatingCircuitBathRoom heatingCircuitBathRoomRelay, 
         IRelayHeatingCircuitBathRoomWall heatingCircuitBathRoomWallRelay, IRelayHeatingCircuitBedRoom heatingCircuitBedRoomRelay, 
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
         IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
-        ITechnologyService technologyService, IHdoIndicator hdoIndicator)
+        ITechnologyService technologyService, IHdoIndicator hdoIndicator, ITemperaturesFacade temperatures)
     {
-        _technologyController = technologyController;
         _stateMediator = stateMediator;
         _logger = logger;
         _heatingCircuitBathRoomRelay = heatingCircuitBathRoomRelay;
@@ -111,25 +109,31 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _extraHeatingRelay = extraHeatingRelay;
         _technologyService = technologyService;
         _hdoIndicator = hdoIndicator;
+        _temperatures = temperatures;
     }
+
+    
     
     
     public async Task Run(CancellationToken ct)
     {
-        var sw = Stopwatch.StartNew();
-        var now = DateTime.Now;
-        
         // Read values
-        await using var resources = _technologyController.Open();
-        var temperatures = await resources.GetTemperatures(ct);
-        await _hdoIndicator.ReadAsync();
+        await Task.WhenAll(
+            _hdoIndicator.ReadAsync(),
+            _temperatures.ReadAll()
+            );
         
-
+        if (ReadFailed())
+            return;
+        
+        
         _stateMediator.CurrentTemperatures = new CurrentTemperatures(
-            temperatures.TOut, temperatures.TWather, temperatures.THeatherBack);
+            _temperatures.OutAmbient, 
+            _temperatures.WaterReservoir,
+            _temperatures.HeaterBack);
         
         // Evaluate
-        _technologyService.Evaluate(temperatures);
+        _technologyService.Evaluate();
         
         
         // Act
@@ -151,17 +155,11 @@ public class ServiceLoopIteration : IServiceLoopIteration
             _logger.LogError(e, "Cannot set relay");
         }
         
-
-
+        
         // Persist
         await _stateMediator.PersistIfChange();
     }
 
-    public ValueTask DisposeAsync()
-    {
-        
-        
-        return ValueTask.CompletedTask;
-    }
+    bool ReadFailed() => !_hdoIndicator.ValidValue || _temperatures.ReadFailed();
 }
 

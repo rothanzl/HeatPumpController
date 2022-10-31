@@ -65,7 +65,7 @@ public class SensorMessage
 }
 
 
-public interface IMqttTemperatureSensor
+public interface IMqttTemperatureSensor : IDevice<AnalogSensorValue, float>
 {
     Task ConsumeMessage(SensorMessage message);
     string Topic { get; }
@@ -79,16 +79,24 @@ public abstract class MqttTemperatureSensorBase : IMqttTemperatureSensor
 
         var roomName = topic.Split("_")[1];
         Monitoring = new(roomName);
+        
+        Value = AnalogSensorValue.CreateInvalid();
     }
     
     public Task ConsumeMessage(SensorMessage message)
     {
         Monitoring.Set(message);
+        Value = AnalogSensorValue.CreateValid(message.Temperature);
         return Task.CompletedTask;
     }
 
     private MqttTemperatureMonitoring Monitoring { get; }
     public string Topic { get; }
+    public Task ReadAsync() => Task.CompletedTask;
+
+
+    public bool ValidValue => Value.Valid;
+    public AnalogSensorValue Value { get; private set; }
 }
 
 public interface IBathRoomTemperatureSensor : IMqttTemperatureSensor{}

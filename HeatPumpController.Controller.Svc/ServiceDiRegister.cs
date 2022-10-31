@@ -13,10 +13,8 @@ public static class ServiceDiRegister
 {
     public static IServiceCollection RegisterControllerSvc(this IServiceCollection services, WebApplicationBuilder builder)
     {
-        services.AddSingleton<ITechnologyController, TechnologyController>();
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
-        services.AddSingleton<ITechnologyResources, TechnologyResources>();
         services.AddSingleton<IWeatherForecast, WeatherForecast>();
         services.AddSingleton<IWaterTemperature, WaterTemperature>();
         services.AddSingleton<IHeaterBackTemperature, HeaterBackTemperature>();
@@ -32,7 +30,7 @@ public static class ServiceDiRegister
         services.AddSingleton<IRelayExtraHeating, RelayExtraHeating>();
         services.AddSingleton<ITechnologyService, TechnologyService>();
         services.AddSingleton<IMqttTemperatureSensorsHelper, MqttTemperatureSensorsHelper>();
-
+        services.AddSingleton<ITemperaturesFacade, TemperaturesFacade>();   
         services.AddSingleton<IBathRoomTemperatureSensor, BathRoomTemperatureSensor>();
         services.AddSingleton<ISmallRoomTemperatureSensor, SmallRoomTemperatureSensor>();
         services.AddSingleton<IBedRoomTemperatureSensor, BedRoomTemperatureSensor>();
