@@ -3,6 +3,7 @@ using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Services;
 using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
+using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
 
@@ -37,6 +38,7 @@ public static class ServiceDiRegister
         services.AddSingleton<IBedRoomTemperatureSensor, BedRoomTemperatureSensor>();
         services.AddSingleton<ILivingRoomTemperatureSensor, LivingRoomTemperatureSensor>();
         services.AddSingleton<IKitchenTemperatureSensor, KitchenTemperatureSensor>();
+        services.AddSingleton<IHdoIndicator, HdoIndicator>();
         
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         

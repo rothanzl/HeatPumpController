@@ -1,4 +1,6 @@
 
+using HeatPumpController.Controller.Svc.Technology.Sensors;
+
 namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentStateMediator

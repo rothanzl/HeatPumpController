@@ -1,5 +1,7 @@
 using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
+using HeatPumpController.Controller.Svc.Technology.Sensors;
+using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
 namespace HeatPumpController.Web.Services;
 
@@ -13,15 +15,18 @@ public interface IViewModel : IDisposable, IRelayState, IProcessState
 
     event Measurement.DataChangedHandler DataChanged;
     Task SetAllRelays(bool val);
+    DigitalSensorValue HdoIndicator { get; }
 }
 
 public class ViewModel : IViewModel
 {
     private readonly IPersistentStateMediator _stateMediator;
+    private readonly IHdoIndicator _hdoIndicator;
     
-    public ViewModel(IPersistentStateMediator persistentStateMediator)
+    public ViewModel(IPersistentStateMediator persistentStateMediator, IHdoIndicator hdoIndicator)
     {
         _stateMediator = persistentStateMediator;
+        _hdoIndicator = hdoIndicator;
         _stateMediator.CurrentValuesChanged += CurrentValuesChangedHandler;
 
         var currTemps = _stateMediator.CurrentTemperatures;
@@ -208,6 +213,8 @@ public class ViewModel : IViewModel
         await _stateMediator.PersistIfChange();
         DataChanged?.Invoke();
     }
+
+    public DigitalSensorValue HdoIndicator => _hdoIndicator.Value;
 
     public bool Automation {
         get => _stateMediator.ProcessState.Automation;

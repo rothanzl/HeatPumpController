@@ -71,7 +71,7 @@ public class TemperatureMonitoring : TemperatureMonitoringBase
         };
     }
 
-    public void Set(SensorValue value)
+    public void Set(AnalogSensorValue value)
     {
         if (value.Valid)
         {

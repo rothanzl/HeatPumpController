@@ -33,7 +33,7 @@ public class WeatherForecast : IWeatherForecast
         _logger = logger;
         DummyTechnology = config.Value.DummyTechnology;
         
-        Value = SensorValue.CreateInvalid();
+        Value = AnalogSensorValue.CreateInvalid();
     }
 
     public Task ReadAsync()
@@ -52,7 +52,7 @@ public class WeatherForecast : IWeatherForecast
 
     private Task SetDummyValue()
     {
-        Value = SensorValue.CreateValid(new Random().NextSingle() * 50);
+        Value = AnalogSensorValue.CreateValid(new Random().NextSingle() * 50);
         return Task.CompletedTask;
     }
 
@@ -85,16 +85,16 @@ public class WeatherForecast : IWeatherForecast
             if (responseObject == null)
             {
                 _logger.LogError("Error pare response object");
-                Value = SensorValue.CreateInvalid();
+                Value = AnalogSensorValue.CreateInvalid();
             }
             else
             {
-                Value = SensorValue.CreateValid(responseObject.Current.Temp);
+                Value = AnalogSensorValue.CreateValid(responseObject.Current.Temp);
             }
         }
         catch (Exception e)
         {
-            Value = SensorValue.CreateInvalid();
+            Value = AnalogSensorValue.CreateInvalid();
             _logger.LogError(e, "Error get forecast");
         }
         finally
@@ -106,7 +106,7 @@ public class WeatherForecast : IWeatherForecast
     
     
 
-    public SensorValue Value { get; private set; }
+    public AnalogSensorValue Value { get; private set; }
 
 
     private class ResponseObject

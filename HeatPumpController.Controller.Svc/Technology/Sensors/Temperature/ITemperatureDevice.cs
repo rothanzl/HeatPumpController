@@ -1,7 +1,6 @@
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
-public interface ITemperatureDevice
+public interface ITemperatureDevice : IDevice<AnalogSensorValue, float>
 {
-    Task ReadAsync();
-    SensorValue Value { get; }
+    AnalogSensorValue Value { get; }
 }

@@ -50,13 +50,13 @@ public abstract class OneWireTemperature : IOneWireTemperature
         _logger = logger;
         DummyTechnology = globalConfig.Value.DummyTechnology;
 
-        Value = SensorValue.CreateInvalid();
+        Value = AnalogSensorValue.CreateInvalid();
     }
 
     public string BusId { get; }
     public string DeviceId { get; }
 
-    public SensorValue Value { get; private set; }
+    public AnalogSensorValue Value { get; private set; }
     
     public async Task ReadAsync()
     {
@@ -71,12 +71,12 @@ public abstract class OneWireTemperature : IOneWireTemperature
         {
             OneWireThermometerDevice dev = new(BusId, DeviceId);
             var temp = await dev.ReadTemperatureAsync();
-            Value = SensorValue.CreateValid((float)temp.Value);
+            Value = AnalogSensorValue.CreateValid((float)temp.Value);
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Error ReadAsync");
-            Value = SensorValue.CreateInvalid();
+            Value = AnalogSensorValue.CreateInvalid();
         }
         
         Monitoring.Set(Value);
@@ -84,7 +84,7 @@ public abstract class OneWireTemperature : IOneWireTemperature
 
     private void SetDummyValue()
     {
-        Value = SensorValue.CreateValid(new Random().NextSingle() * 50);
+        Value = AnalogSensorValue.CreateValid(new Random().NextSingle() * 50);
     }
     
     
