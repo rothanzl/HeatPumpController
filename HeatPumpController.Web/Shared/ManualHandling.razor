@@ -13,10 +13,27 @@
     </div>
 </div>
 
-<RelayButton ParameterName="@nameof(ViewModel.HeatPumpRelay)"/>
-<RelayButton ParameterName="@nameof(ViewModel.UpperValveRelay)"/>
-<RelayButton ParameterName="@nameof(ViewModel.LowerValveRelay)"/>
-<RelayButton ParameterName="@nameof(ViewModel.ExtraHeatingRelay)"/>
+<div class="row">
+    <div class="col">
+        <h4>Controll heating</h4>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatPumpRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.UpperValveRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.LowerValveRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.ExtraHeatingRelay)"/>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h4>Controll valves</h4>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBathRoomWallRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBathRoomRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitKitchenRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitLivingRoomRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBedRoomRelay)"/>
+        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitSmallRoomRelay)"/>
+    </div>
+</div>
 
 @code {
 
