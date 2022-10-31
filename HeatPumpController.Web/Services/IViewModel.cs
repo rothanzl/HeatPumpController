@@ -12,6 +12,7 @@ public interface IViewModel : IDisposable, IRelayState, IProcessState
     ProcessStateEnum ProcessState { get; }
 
     event Measurement.DataChangedHandler DataChanged;
+    Task SetAllRelays(bool val);
 }
 
 public class ViewModel : IViewModel
@@ -185,6 +186,27 @@ public class ViewModel : IViewModel
             Task.Run(() => _stateMediator.PersistIfChange()).Wait();
             DataChanged?.Invoke();
         }
+    }
+    
+    public async Task SetAllRelays(bool val)
+    {
+        if (_stateMediator.ProcessState.Automation)
+            return;
+        
+        _stateMediator.Relays.HeatPumpRelay = val;
+        _stateMediator.Relays.UpperValveRelay = val;
+        _stateMediator.Relays.LowerValveRelay = val;
+        _stateMediator.Relays.ExtraHeatingRelay = val;
+
+        _stateMediator.Relays.HeatingCircuitBathRoomWallRelay = val;
+        _stateMediator.Relays.HeatingCircuitBathRoomRelay = val;
+        _stateMediator.Relays.HeatingCircuitKitchenRelay = val;
+        _stateMediator.Relays.HeatingCircuitLivingRoomRelay = val;
+        _stateMediator.Relays.HeatingCircuitBedRoomRelay = val;
+        _stateMediator.Relays.HeatingCircuitSmallRoomRelay = val;
+
+        await _stateMediator.PersistIfChange();
+        DataChanged?.Invoke();
     }
 
     public bool Automation {

@@ -77,23 +77,8 @@
 
     }
 
-    private void CloseAllButtonClick() => SetAllRelays(true);
+    private Task CloseAllButtonClick() => ViewModel.SetAllRelays(true);
 
-    private void OpenAllButtonClick() => SetAllRelays(false);
-
-    private void SetAllRelays(bool val)
-    {
-        ViewModel.HeatPumpRelay = val;
-        ViewModel.UpperValveRelay = val;
-        ViewModel.LowerValveRelay = val;
-        ViewModel.ExtraHeatingRelay = val;
-
-        ViewModel.HeatingCircuitBathRoomWallRelay = val;
-        ViewModel.HeatingCircuitBathRoomRelay = val;
-        ViewModel.HeatingCircuitKitchenRelay = val;
-        ViewModel.HeatingCircuitLivingRoomRelay = val;
-        ViewModel.HeatingCircuitBedRoomRelay = val;
-        ViewModel.HeatingCircuitSmallRoomRelay = val;
-    }
+    private Task OpenAllButtonClick() => ViewModel.SetAllRelays(false);
 
 }
