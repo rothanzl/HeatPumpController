@@ -3,6 +3,7 @@ using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
+using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
 namespace HeatPumpController.Controller.Svc.Services;
 
@@ -85,6 +86,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly IRelayUpperValve _upperValveRelay;
     private readonly IRelayExtraHeating _extraHeatingRelay;
     private readonly ITechnologyService _technologyService;
+    private readonly IHdoIndicator _hdoIndicator;
 
     public ServiceLoopIteration(ITechnologyController technologyController, IPersistentStateMediator stateMediator, 
         ILogger<ServiceLoopIteration> logger, IRelayHeatingCircuitBathRoom heatingCircuitBathRoomRelay, 
@@ -92,7 +94,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
         IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
-        ITechnologyService technologyService)
+        ITechnologyService technologyService, IHdoIndicator hdoIndicator)
     {
         _technologyController = technologyController;
         _stateMediator = stateMediator;
@@ -108,6 +110,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _upperValveRelay = upperValveRelay;
         _extraHeatingRelay = extraHeatingRelay;
         _technologyService = technologyService;
+        _hdoIndicator = hdoIndicator;
     }
     
     
@@ -119,6 +122,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         // Read values
         await using var resources = _technologyController.Open();
         var temperatures = await resources.GetTemperatures(ct);
+        await _hdoIndicator.ReadAsync();
         
 
         _stateMediator.CurrentTemperatures = new CurrentTemperatures(
