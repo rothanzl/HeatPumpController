@@ -20,7 +20,7 @@ public class HdoIndicator : IHdoIndicator
         try
         {
             using var controller = new GpioController();
-            controller.OpenPin(PinNumber, PinMode.Input);
+            controller.OpenPin(PinNumber, PinMode.InputPullDown);
             var value = controller.Read(PinNumber);
             Value = DigitalSensorValue.CreateValid(value == PinValue.High);
         }
