@@ -123,8 +123,6 @@ public class ServiceLoopIteration : IServiceLoopIteration
             _temperatures.ReadAll()
             );
         
-        if (ReadFailed())
-            return;
         
         
         _stateMediator.CurrentTemperatures = new CurrentTemperatures(
@@ -159,7 +157,5 @@ public class ServiceLoopIteration : IServiceLoopIteration
         // Persist
         await _stateMediator.PersistIfChange();
     }
-
-    bool ReadFailed() => !_hdoIndicator.ValidValue || _temperatures.ReadFailed();
 }
 

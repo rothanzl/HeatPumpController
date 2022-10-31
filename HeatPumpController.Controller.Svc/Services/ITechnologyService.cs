@@ -28,16 +28,9 @@ public class TechnologyService : ITechnologyService
 
     public void Evaluate()
     {
-        if (!_stateMediator.ProcessState.Automation)
-            return;
-
-        if (!_hdoIndicator.Value.Value)
-            return;
-
         var beginState = _stateMediator.ProcessState.State;
         
-        EvaluateHeater();
-        EvaluateWaterTemp();
+        EvaluateInternal();
 
         if (beginState != _stateMediator.ProcessState.State)
         {
@@ -45,6 +38,32 @@ public class TechnologyService : ITechnologyService
             _stateMediator.StateChanged();
         }
     }
+
+    private void EvaluateInternal()
+    {
+        if (!_stateMediator.ProcessState.Automation)
+            return;
+
+        if (ReadFailed())
+        {
+            _stateMediator.ProcessState.State = ProcessStateEnum.DoNothing;
+            return;
+        }
+        
+
+        if (!_hdoIndicator.Value.Value)
+        {
+            _stateMediator.ProcessState.State = ProcessStateEnum.DoNothing;
+            return;
+        }
+
+        
+        
+        EvaluateHeater();
+        EvaluateWaterTemp();
+    }
+
+    private bool ReadFailed() => !_hdoIndicator.ValidValue || _temperatures.ReadFailed();
 
     private void EvaluateHeater()
     {
