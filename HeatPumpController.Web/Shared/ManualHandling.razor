@@ -2,13 +2,29 @@
 @inject IViewModel ViewModel
 @implements IDisposable
 
-<h3>@AutomationState Mode</h3>
+<h3>@AutomationState mode</h3>
 <p>@ProcessState</p>
 
 <div class="row">
     <div class="col">
         <p>
             <button @onclick="ModeChangeButtonClick">@ModeChangeButtonText</button>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <p>
+            <button @onclick="CloseAllButtonClick" disabled="@ViewModel.Automation">Close All</button>
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <p>
+            <button @onclick="OpenAllButtonClick" disabled="@ViewModel.Automation">Open All</button>
         </p>
     </div>
 </div>
@@ -43,8 +59,8 @@
         base.OnInitialized();
     }
 
-    private string AutomationState => ViewModel.Automation ? "A" : "";
-    private string ModeChangeButtonText => ViewModel.Automation ? "Manual" : "Automate";
+    private string AutomationState => ViewModel.Automation ? "Auto" : "Man";
+    private string ModeChangeButtonText => ViewModel.Automation ? "Turn to Manual mode" : "Turn to Automate mode";
 
     private string ProcessState => ViewModel.ProcessState.ToString();
     
@@ -59,6 +75,25 @@
     {
         ViewModel.DataChanged -= DataChangedHandler;
 
+    }
+
+    private void CloseAllButtonClick() => SetAllRelays(true);
+
+    private void OpenAllButtonClick() => SetAllRelays(false);
+
+    private void SetAllRelays(bool val)
+    {
+        ViewModel.HeatPumpRelay = val;
+        ViewModel.UpperValveRelay = val;
+        ViewModel.LowerValveRelay = val;
+        ViewModel.ExtraHeatingRelay = val;
+
+        ViewModel.HeatingCircuitBathRoomWallRelay = val;
+        ViewModel.HeatingCircuitBathRoomRelay = val;
+        ViewModel.HeatingCircuitKitchenRelay = val;
+        ViewModel.HeatingCircuitLivingRoomRelay = val;
+        ViewModel.HeatingCircuitBedRoomRelay = val;
+        ViewModel.HeatingCircuitSmallRoomRelay = val;
     }
 
 }
