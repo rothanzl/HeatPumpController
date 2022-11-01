@@ -49,10 +49,11 @@ public class MqttService : IHostedService, IDisposable
             _logger.LogInformation("Connected");
             return Task.CompletedTask;
         };
-        _mqttClient.DisconnectedAsync += args =>
+        _mqttClient.DisconnectedAsync += async args =>
         {
-            _logger.LogError(args.Exception, "Disconnected[{Reaosn}]", args.Reason.ToString());
-            return Task.CompletedTask;
+            _logger.LogError(args.Exception, "Disconnected[{Reaosn}] - wait and reconnect", args.Reason.ToString());
+            await Task.Delay(TimeSpan.FromSeconds(10));
+            await Connect();
         };
             
         var builder = new MqttClientOptionsBuilder()
