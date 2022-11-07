@@ -3,6 +3,7 @@ using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Services;
 using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
+using HeatPumpController.Controller.Svc.Technology.Control.Equitherm;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
