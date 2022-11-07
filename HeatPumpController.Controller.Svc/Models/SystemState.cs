@@ -24,6 +24,8 @@ public interface IRelayState
     bool UpperValveRelay { get; set; }
     bool HeatPumpRelay { get; set; }
     bool ExtraHeatingRelay { get; set; }
+    bool RecuperationUnitLowRelay { get; set; } 
+    bool ReserveRelay { get; set; }
 }
 
 public class RelayState : IRelayState
@@ -38,6 +40,8 @@ public class RelayState : IRelayState
     public bool UpperValveRelay { get; set; }
     public bool HeatPumpRelay { get; set; }
     public bool ExtraHeatingRelay { get; set; }
+    public bool RecuperationUnitLowRelay { get; set; }
+    public bool ReserveRelay { get; set; }
 }
 
 public interface IProcessState

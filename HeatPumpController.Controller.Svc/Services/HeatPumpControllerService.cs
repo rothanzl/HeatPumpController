@@ -83,6 +83,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
     private readonly IRelayLowerValve _lowerValveRelay;
     private readonly IRelayUpperValve _upperValveRelay;
     private readonly IRelayExtraHeating _extraHeatingRelay;
+    private readonly IRelayRecuperationUnitLow _recuperationUnitLowRelay;
+    private readonly IRelayReserve _reserveRelay;
     private readonly ITechnologyService _technologyService;
     private readonly ITemperaturesFacade _temperatures;
     private readonly IHdoIndicator _hdoIndicator;
@@ -93,7 +95,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayHeatingCircuitKitchen heatingCircuitKitchenRelay, IRelayHeatingCircuitLivingRoom heatingCircuitLivingRoomRelay, 
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
         IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
-        ITechnologyService technologyService, IHdoIndicator hdoIndicator, ITemperaturesFacade temperatures)
+        ITechnologyService technologyService, IHdoIndicator hdoIndicator, ITemperaturesFacade temperatures, 
+        IRelayRecuperationUnitLow recuperationUnitLowRelay, IRelayReserve reserveRelay)
     {
         _stateMediator = stateMediator;
         _logger = logger;
@@ -110,6 +113,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _technologyService = technologyService;
         _hdoIndicator = hdoIndicator;
         _temperatures = temperatures;
+        _recuperationUnitLowRelay = recuperationUnitLowRelay;
+        _reserveRelay = reserveRelay;
     }
 
     
@@ -147,6 +152,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
             _lowerValveRelay.Set(_stateMediator.Relays.LowerValveRelay);
             _upperValveRelay.Set(_stateMediator.Relays.UpperValveRelay);
             _extraHeatingRelay.Set(_stateMediator.Relays.ExtraHeatingRelay);
+            _recuperationUnitLowRelay.Set(_stateMediator.Relays.RecuperationUnitLowRelay);
+            _reserveRelay.Set(_stateMediator.Relays.ReserveRelay);
         }
         catch (Exception e)
         {

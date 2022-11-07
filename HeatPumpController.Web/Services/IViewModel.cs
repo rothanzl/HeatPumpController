@@ -192,6 +192,30 @@ public class ViewModel : IViewModel
             DataChanged?.Invoke();
         }
     }
+    public bool RecuperationUnitLowRelay { 
+        get => _stateMediator.Relays.RecuperationUnitLowRelay;
+        set
+        {
+            if (_stateMediator.ProcessState.Automation)
+                return;
+
+            _stateMediator.Relays.RecuperationUnitLowRelay = value;
+            Task.Run(() => _stateMediator.PersistIfChange()).Wait();
+            DataChanged?.Invoke();
+        } 
+    }
+    public bool ReserveRelay { 
+        get => _stateMediator.Relays.ReserveRelay;
+        set
+        {
+            if (_stateMediator.ProcessState.Automation)
+                return;
+
+            _stateMediator.Relays.ReserveRelay = value;
+            Task.Run(() => _stateMediator.PersistIfChange()).Wait();
+            DataChanged?.Invoke();
+        } 
+    }
     
     public async Task SetAllRelays(bool val)
     {
@@ -209,6 +233,9 @@ public class ViewModel : IViewModel
         _stateMediator.Relays.HeatingCircuitLivingRoomRelay = val;
         _stateMediator.Relays.HeatingCircuitBedRoomRelay = val;
         _stateMediator.Relays.HeatingCircuitSmallRoomRelay = val;
+
+        _stateMediator.Relays.RecuperationUnitLowRelay = val;
+        _stateMediator.Relays.ReserveRelay = val;
 
         await _stateMediator.PersistIfChange();
         DataChanged?.Invoke();

@@ -21,6 +21,8 @@ public class GpioConfig
         public const int HandleHeatingCircuitKitchen = 12;
         public const int HandleHeatingCircuitLivingRoom = 1;
         public const int HandleHeatingCircuitBathRoomWall = 7;
-        
+
+        public const int HandleRecuperationUnitLow = 8;
+        public const int Reserve = 25;
     }
 }
