@@ -1,4 +1,6 @@
 using System.Device.Gpio;
+using HeatPumpController.Controller.Svc.Config;
+using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
@@ -6,9 +8,12 @@ public interface IHdoIndicator : IDevice<DigitalSensorValue, bool>{}
 
 public class HdoIndicator : IHdoIndicator
 {
-    public HdoIndicator(ILogger<HdoIndicator> logger)
+    private bool IsDummy { get; }
+    
+    public HdoIndicator(ILogger<HdoIndicator> logger, IOptions<ControllerConfig> globalConfig)
     {
         _logger = logger;
+        IsDummy = globalConfig.Value.DummyTechnology;
     }
 
     private int PinNumber { get; } = GpioConfig.Pins.HdoInput;
@@ -17,6 +22,9 @@ public class HdoIndicator : IHdoIndicator
 
     public Task ReadAsync()
     {
+        if (IsDummy)
+            return ReadDummyAsync();
+        
         try
         {
             using var controller = new GpioController();
@@ -30,6 +38,12 @@ public class HdoIndicator : IHdoIndicator
             Value = DigitalSensorValue.CreateInvalid();
         }
         
+        return Task.CompletedTask;
+    }
+
+    private Task ReadDummyAsync()
+    {
+        Value = DigitalSensorValue.CreateValid(true);
         return Task.CompletedTask;
     }
 
