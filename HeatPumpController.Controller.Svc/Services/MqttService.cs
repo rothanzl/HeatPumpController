@@ -3,6 +3,7 @@ using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
 using Microsoft.Extensions.Options;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Protocol;
 
 namespace HeatPumpController.Controller.Svc.Services;
 
@@ -64,24 +65,30 @@ public class MqttService : IHostedService, IDisposable
         
 
         var mqttClientOptions = builder.Build();
-        await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-        
-        
+
+
+        void SetMqttTopicFilterBuilder(MqttTopicFilterBuilder b, string topicName)
+        {
+            b.WithTopic(topicName);
+            b.WithExactlyOnceQoS();
+            b.WithRetainHandling(MqttRetainHandling.SendAtSubscribe);
+        }
         // Create the subscribe options including several topics with different options.
         // It is also possible to all of these topics using a dedicated call of _SubscribeAsync_ per topic.
         var mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
             .WithTopicFilter(
-                f => { f.WithTopic(MqttTopics.TempKitchen); })
+                f => SetMqttTopicFilterBuilder(f, MqttTopics.TempKitchen))
             .WithTopicFilter(
-                f => { f.WithTopic(MqttTopics.TempBathRoom); })
+                f => SetMqttTopicFilterBuilder(f,MqttTopics.TempBathRoom))
             .WithTopicFilter(
-                f => { f.WithTopic(MqttTopics.TempBedRoom); })
+                f => SetMqttTopicFilterBuilder(f, MqttTopics.TempBedRoom))
             .WithTopicFilter(
-                f => { f.WithTopic(MqttTopics.TempLivingRoom); })
+                f => SetMqttTopicFilterBuilder(f, MqttTopics.TempLivingRoom))
             .WithTopicFilter(
-                f => { f.WithTopic(MqttTopics.TempSmallRoom); })
+                f => SetMqttTopicFilterBuilder(f, MqttTopics.TempSmallRoom))
             .Build();
-
+        
+        await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
         var response = await _mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
     }
 
