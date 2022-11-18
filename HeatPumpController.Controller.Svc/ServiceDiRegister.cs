@@ -35,6 +35,7 @@ public static class ServiceDiRegister
         services.AddSingleton<IMqttTemperatureSensorsHelper, MqttTemperatureSensorsHelper>();
         services.AddSingleton<ITemperaturesFacade, TemperaturesFacade>();   
         services.AddSingleton<IBathRoomTemperatureSensor, BathRoomTemperatureSensor>();
+        services.AddSingleton<ITechRoomTemperatureSensor, TechRoomTemperatureSensor>();
         services.AddSingleton<ISmallRoomTemperatureSensor, SmallRoomTemperatureSensor>();
         services.AddSingleton<IBedRoomTemperatureSensor, BedRoomTemperatureSensor>();
         services.AddSingleton<ILivingRoomTemperatureSensor, LivingRoomTemperatureSensor>();

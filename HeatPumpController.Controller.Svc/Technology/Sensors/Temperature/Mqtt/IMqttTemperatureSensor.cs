@@ -19,11 +19,12 @@ public class MqttTemperatureSensorsHelper : IMqttTemperatureSensorsHelper
         ISmallRoomTemperatureSensor s2,
         IBedRoomTemperatureSensor s3,
         ILivingRoomTemperatureSensor s4,
-        IKitchenTemperatureSensor s5
+        IKitchenTemperatureSensor s5,
+        ITechRoomTemperatureSensor s6
         )
     {
         _logger = logger;
-        _sensors = new IMqttTemperatureSensor[] { s1, s2, s3, s4, s5 };
+        _sensors = new IMqttTemperatureSensor[] { s1, s2, s3, s4, s5, s6 };
     }
 
     public async Task HandleMessage(string topic, byte[] message)
@@ -97,6 +98,17 @@ public abstract class MqttTemperatureSensorBase : IMqttTemperatureSensor
 
     public bool ValidValue => Value.Valid;
     public AnalogSensorValue Value { get; private set; }
+}
+
+public interface ITechRoomTemperatureSensor : IMqttTemperatureSensor {}
+
+class TechRoomTemperatureSensor : MqttTemperatureSensorBase, ITechRoomTemperatureSensor
+{
+    private const string TopicStatic = MqttTopics.TempTechRoom;
+    
+    public TechRoomTemperatureSensor() : base(TopicStatic)
+    {
+    }
 }
 
 public interface IBathRoomTemperatureSensor : IMqttTemperatureSensor{}

@@ -14,6 +14,7 @@ public class MqttTopics
     public const string TempBathRoom = "zigbee2mqtt/TempSensor_BathRoom";
     public const string TempKitchen = "zigbee2mqtt/TempSensor_Kitchen";
     public const string TempBedRoom = "zigbee2mqtt/TempSensor_BedRoom";
+    public const string TempTechRoom = "zigbee2mqtt/TempSensor_TechRoom";
 }
 
 public class MqttService : IHostedService, IDisposable
@@ -86,6 +87,8 @@ public class MqttService : IHostedService, IDisposable
                 f => SetMqttTopicFilterBuilder(f, MqttTopics.TempLivingRoom))
             .WithTopicFilter(
                 f => SetMqttTopicFilterBuilder(f, MqttTopics.TempSmallRoom))
+            .WithTopicFilter(
+                f => SetMqttTopicFilterBuilder(f, MqttTopics.TempTechRoom))
             .Build();
         
         await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);

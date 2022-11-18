@@ -14,11 +14,13 @@ public class HdoIndicator : IHdoIndicator
     {
         _logger = logger;
         IsDummy = globalConfig.Value.DummyTechnology;
+        _monitoring = new();
     }
 
     private int PinNumber { get; } = GpioConfig.Pins.HdoInput;
 
     private readonly ILogger<HdoIndicator> _logger;
+    private readonly HdoMonitoring _monitoring;
 
     public Task ReadAsync()
     {
@@ -38,12 +40,14 @@ public class HdoIndicator : IHdoIndicator
             Value = DigitalSensorValue.CreateInvalid();
         }
         
+        _monitoring.Set(Value);
         return Task.CompletedTask;
     }
 
     private Task ReadDummyAsync()
     {
         Value = DigitalSensorValue.CreateValid(true);
+        _monitoring.Set(Value);
         return Task.CompletedTask;
     }
 

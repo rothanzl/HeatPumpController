@@ -2,11 +2,10 @@ using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
 
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
-
 public abstract class TemperatureMonitoringBase
 {
     protected abstract string Name { get; }
-    protected const string Label = "heatpump_device";
+    public const string Label = "heatpump_device";
 
     protected void Unpublish(string[] labels)
     {

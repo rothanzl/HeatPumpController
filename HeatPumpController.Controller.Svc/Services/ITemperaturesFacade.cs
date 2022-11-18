@@ -17,6 +17,7 @@ public interface ITemperaturesFacade
     float LivingRoom { get; }
     float SmallRoom { get; }
     float BedRoom { get; }
+    float TechRoom { get; }
 }
 
 public class TemperaturesFacade : ITemperaturesFacade
@@ -30,13 +31,15 @@ public class TemperaturesFacade : ITemperaturesFacade
     private readonly ILivingRoomTemperatureSensor _livingRoom;
     private readonly ISmallRoomTemperatureSensor _smallRoom;
     private readonly IBedRoomTemperatureSensor _bedRoom;
+    private readonly ITechRoomTemperatureSensor _techRoom;
 
 
     public TemperaturesFacade(IWaterTemperature waterTemperatureDevice, 
         IHeaterBackTemperature heatherBackTemperatureDevice, 
         IWeatherForecast weatherForecast, IKitchenTemperatureSensor kitchen, 
         IBathRoomTemperatureSensor bathRoom, ILivingRoomTemperatureSensor livingRoom, 
-        ISmallRoomTemperatureSensor smallRoom, IBedRoomTemperatureSensor bedRoom)
+        ISmallRoomTemperatureSensor smallRoom, IBedRoomTemperatureSensor bedRoom, 
+        ITechRoomTemperatureSensor techRoom)
     {
         _waterTemperatureDevice = waterTemperatureDevice;
         _heatherBackTemperatureDevice = heatherBackTemperatureDevice;
@@ -46,6 +49,7 @@ public class TemperaturesFacade : ITemperaturesFacade
         _livingRoom = livingRoom;
         _smallRoom = smallRoom;
         _bedRoom = bedRoom;
+        _techRoom = techRoom;
 
         Devices = new IDevice[]
         {
@@ -56,7 +60,8 @@ public class TemperaturesFacade : ITemperaturesFacade
             _bathRoom,
             _livingRoom,
             _smallRoom,
-            _bedRoom
+            _bedRoom,
+            _techRoom
         };
     }
     
@@ -74,4 +79,5 @@ public class TemperaturesFacade : ITemperaturesFacade
     public float LivingRoom => _livingRoom.Value.Value;
     public float SmallRoom => _smallRoom.Value.Value;
     public float BedRoom => _bedRoom.Value.Value;
+    public float TechRoom => _techRoom.Value.Value;
 }
