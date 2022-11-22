@@ -13,11 +13,15 @@ public abstract class RelayHandlerBase : IRelayHandler
 {
     private int PinNumber { get; }
     private bool DummyTechnology { get; }
+    private readonly GpioController _gpioController;
     
-    protected RelayHandlerBase(int pinNumber, IOptions<ControllerConfig> config)
+    protected RelayHandlerBase(int pinNumber, IOptions<ControllerConfig> config, GpioController gpioController)
     {
         PinNumber = pinNumber;
+        _gpioController = gpioController;
         DummyTechnology = config.Value.DummyTechnology;
+        
+        _gpioController.OpenPin(PinNumber, PinMode.Output);
     }
     
     
@@ -27,9 +31,8 @@ public abstract class RelayHandlerBase : IRelayHandler
         
         PinValue value = set ? PinValue.Low : PinValue.High;
         
-        using var controller = new GpioController();
-        controller.OpenPin(PinNumber, PinMode.Output);
-        controller.Write(pinNumber: PinNumber, value);
+        
+        _gpioController.Write(pinNumber: PinNumber, value);
     }
 
 }

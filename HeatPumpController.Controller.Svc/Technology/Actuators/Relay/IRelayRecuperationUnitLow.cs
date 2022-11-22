@@ -1,3 +1,4 @@
+using System.Device.Gpio;
 using HeatPumpController.Controller.Svc.Config;
 using Microsoft.Extensions.Options;
 
@@ -7,8 +8,8 @@ public interface IRelayRecuperationUnitLow : IRelayHandler{}
 
 public class RelayRecuperationUnitLow : RelayHandlerBase, IRelayRecuperationUnitLow
 {
-    public RelayRecuperationUnitLow(IOptions<ControllerConfig> config) : 
-        base(GpioConfig.Pins.HandleRecuperationUnitLow, config)
+    public RelayRecuperationUnitLow(IOptions<ControllerConfig> config, GpioController gpioController) : 
+        base(GpioConfig.Pins.HandleRecuperationUnitLow, config, gpioController)
     {
     }
 }

@@ -1,3 +1,4 @@
+using System.Device.Gpio;
 using HeatPumpController.Controller.Svc.Config;
 using Microsoft.Extensions.Options;
 
@@ -10,8 +11,8 @@ public interface IRelayHeatingCircuitBedRoom : IRelayHandler
 
 public class RelayHeatingCircuitBedRoom : RelayHandlerBase, IRelayHeatingCircuitBedRoom
 {
-    public RelayHeatingCircuitBedRoom(IOptions<ControllerConfig> config) : 
-        base(GpioConfig.Pins.HandleHeatingCircuitBedRoom, config)
+    public RelayHeatingCircuitBedRoom(IOptions<ControllerConfig> config, GpioController gpioController) : 
+        base(GpioConfig.Pins.HandleHeatingCircuitBedRoom, config, gpioController)
     {
     }
 }

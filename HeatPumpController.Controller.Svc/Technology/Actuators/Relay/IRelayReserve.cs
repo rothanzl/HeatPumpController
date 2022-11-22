@@ -1,3 +1,4 @@
+using System.Device.Gpio;
 using HeatPumpController.Controller.Svc.Config;
 using Microsoft.Extensions.Options;
 
@@ -10,7 +11,8 @@ public interface IRelayReserve : IRelayHandler
 
 public class RelayReserve : RelayHandlerBase, IRelayReserve
 {
-    public RelayReserve(IOptions<ControllerConfig> config) : base(GpioConfig.Pins.Reserve, config)
+    public RelayReserve(IOptions<ControllerConfig> config, GpioController gpioController) : 
+        base(GpioConfig.Pins.Reserve, config, gpioController)
     {
     }
 }
