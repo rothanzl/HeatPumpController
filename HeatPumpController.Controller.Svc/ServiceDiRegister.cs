@@ -1,9 +1,8 @@
+using System.Device.Gpio;
 using HeatPumpController.Controller.Svc.Config;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Services;
-using HeatPumpController.Controller.Svc.Technology;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
-using HeatPumpController.Controller.Svc.Technology.Control.Equitherm;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt;
@@ -41,6 +40,7 @@ public static class ServiceDiRegister
         services.AddSingleton<ILivingRoomTemperatureSensor, LivingRoomTemperatureSensor>();
         services.AddSingleton<IKitchenTemperatureSensor, KitchenTemperatureSensor>();
         services.AddSingleton<IHdoIndicator, HdoIndicator>();
+        services.AddSingleton(new GpioController());
         
         services.Configure<ControllerConfig>(builder.Configuration.GetSection(ControllerConfig.SectionName));
         

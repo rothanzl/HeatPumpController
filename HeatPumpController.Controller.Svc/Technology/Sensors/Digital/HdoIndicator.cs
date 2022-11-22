@@ -4,23 +4,28 @@ using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
-public interface IHdoIndicator : IDevice<DigitalSensorValue, bool>{}
+public interface IHdoIndicator : IDevice<DigitalSensorValue, bool>
+{}
 
 public class HdoIndicator : IHdoIndicator
 {
     private bool IsDummy { get; }
-    
-    public HdoIndicator(ILogger<HdoIndicator> logger, IOptions<ControllerConfig> globalConfig)
+
+    public HdoIndicator(ILogger<HdoIndicator> logger, IOptions<ControllerConfig> globalConfig, GpioController gpioController)
     {
         _logger = logger;
+        _gpioController = gpioController;
         IsDummy = globalConfig.Value.DummyTechnology;
         _monitoring = new();
+        
+        _gpioController.OpenPin(PinNumber, PinMode.InputPullDown);
     }
 
     private int PinNumber { get; } = GpioConfig.Pins.HdoInput;
 
     private readonly ILogger<HdoIndicator> _logger;
     private readonly HdoMonitoring _monitoring;
+    private readonly GpioController _gpioController;
 
     public Task ReadAsync()
     {
@@ -29,9 +34,7 @@ public class HdoIndicator : IHdoIndicator
         
         try
         {
-            using var controller = new GpioController();
-            controller.OpenPin(PinNumber, PinMode.InputPullDown);
-            var value = controller.Read(PinNumber);
+            var value = _gpioController.Read(PinNumber);
             Value = DigitalSensorValue.CreateValid(value == PinValue.Low);
         }
         catch (Exception e)
