@@ -71,6 +71,7 @@ public interface IServiceLoopIteration
 public class ServiceLoopIteration : IServiceLoopIteration
 {
     private readonly IPersistentStateMediator _stateMediator;
+    private readonly IRecuperationUnitService _recuperationUnitService;
     private readonly ILogger<ServiceLoopIteration> _logger;
 
     private readonly IRelayHeatingCircuitBathRoom _heatingCircuitBathRoomRelay;
@@ -96,7 +97,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayHeatingCircuitSmallRoom heatingCircuitSmallRoomRelay, IRelayHeatPump heatPumpRelay, 
         IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
         ITechnologyService technologyService, IHdoIndicator hdoIndicator, ITemperaturesFacade temperatures, 
-        IRelayRecuperationUnitPower recuperationUnitPowerRelay, IRelayRecuperationUnitIntensity recuperationUnitIntensityRelay)
+        IRelayRecuperationUnitPower recuperationUnitPowerRelay, IRelayRecuperationUnitIntensity recuperationUnitIntensityRelay, 
+        IRecuperationUnitService recuperationUnitService)
     {
         _stateMediator = stateMediator;
         _logger = logger;
@@ -115,6 +117,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _temperatures = temperatures;
         _recuperationUnitPowerRelay = recuperationUnitPowerRelay;
         _recuperationUnitIntensityRelay = recuperationUnitIntensityRelay;
+        _recuperationUnitService = recuperationUnitService;
     }
 
     
@@ -142,6 +145,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         // Act
         try
         {
+            await _recuperationUnitService.Act();
+            
             _heatingCircuitBathRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomRelay);
             _heatingCircuitBathRoomWallRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomWallRelay);
             _heatingCircuitBedRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBedRoomRelay);
@@ -163,6 +168,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         
         // Persist
         await _stateMediator.PersistIfChange();
+        
+        _stateMediator.StateChanged();
     }
 }
 

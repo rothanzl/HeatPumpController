@@ -4,7 +4,8 @@ namespace HeatPumpController.Controller.Svc.Models.Infra;
 public interface IPersistentContext<TState> where TState : new()
 {
     TState State { get; }
-    Task WriteIfChange();
+    Task WriteIfChangeAsync();
+    void WriteIfChange();
 }
 
 public class PersistentContext<TState> : IPersistentContext<TState> where TState : new()
@@ -30,8 +31,12 @@ public class PersistentContext<TState> : IPersistentContext<TState> where TState
         }
         
     }
-    
-    public async Task WriteIfChange()
+
+    public void WriteIfChange()
+    {
+        Task.Run(WriteIfChangeAsync).Wait();
+    }
+    public async Task WriteIfChangeAsync()
     {
         var currentSerializedState = Serializer.Serialize(State);
         if (currentSerializedState.Equals(SerializedState))

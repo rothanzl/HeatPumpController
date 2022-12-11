@@ -1,5 +1,6 @@
 using System.Device.Gpio;
 using HeatPumpController.Controller.Svc.Config;
+using HeatPumpController.Controller.Svc.Models;
 using HeatPumpController.Controller.Svc.Models.Infra;
 using HeatPumpController.Controller.Svc.Services;
 using HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
@@ -13,7 +14,10 @@ public static class ServiceDiRegister
 {
     public static IServiceCollection RegisterControllerSvc(this IServiceCollection services, WebApplicationBuilder builder)
     {
+        services.AddSingleton<IPersistentContext<SystemState>>(_ => new PersistentContext<SystemState>(SystemState.Name));
+        
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
+        services.AddSingleton<IRecuperationUnitService, RecuperationUnitService>();
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();
         services.AddSingleton<IWeatherForecast, WeatherForecast>();
         services.AddSingleton<IWaterTemperature, WaterTemperature>();

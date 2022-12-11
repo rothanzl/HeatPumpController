@@ -1,6 +1,4 @@
 
-using HeatPumpController.Controller.Svc.Technology.Sensors;
-
 namespace HeatPumpController.Controller.Svc.Models.Infra;
 
 public interface IPersistentStateMediator
@@ -22,9 +20,9 @@ public class PersistentStateMediator : IPersistentStateMediator
 {
     private readonly IPersistentContext<SystemState> _persistence;
     
-    public PersistentStateMediator()
+    public PersistentStateMediator(IPersistentContext<SystemState> persistence)
     {
-        _persistence = new PersistentContext<SystemState>(SystemState.Name);
+        _persistence = persistence;
     }
 
     public void StateChanged()
@@ -53,12 +51,12 @@ public class PersistentStateMediator : IPersistentStateMediator
     public async Task SetSetPointTemperatures(SetPointTemperatures temperatures)
     {
         _persistence.State.SetPointTemperatures = temperatures;
-        await _persistence.WriteIfChange();
+        await _persistence.WriteIfChangeAsync();
     }
 
     public event IPersistentStateMediator.CurrentValuesChangedHandler? CurrentValuesChanged;
     public Task PersistIfChange()
     {
-        return _persistence.WriteIfChange();
+        return _persistence.WriteIfChangeAsync();
     }
 }

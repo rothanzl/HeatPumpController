@@ -9,7 +9,16 @@ public class SystemState
     public SetPointTemperatures SetPointTemperatures { get; set; } = new (40, 24);
     public RelayState RelayState { get; init; } = new();
     public ProcessState ProcessState { get; init; } = new();
+    public RecuperationUnit RecuperationUnit { get; init; } = new();
 
+}
+
+public class RecuperationUnit
+{
+    public bool AutomationMode { get; set; } = false;
+
+    public bool Paused { get; set; } = false;
+    public DateTime PausedUntil { get; set; } = default;
 }
 
 public interface IRelayState

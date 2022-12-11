@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.RegisterControllerSvc(builder);
 
 builder.Services.AddSingleton<IViewModel, ViewModel>();
+builder.Services.AddSingleton<IRecuperationUnitViewModel, RecuperationUnitViewModel>();
 
 // Add services to the container.
 builder.Services.AddRazorPages();

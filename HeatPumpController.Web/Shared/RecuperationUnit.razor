@@ -1,0 +1,80 @@
+@using HeatPumpController.Web.Services
+@using System.Globalization
+@inject IViewModel _viewModel
+@inject IRecuperationUnitViewModel _recuperationUnit;
+
+<div class="row">
+    <div class="col">
+        <h4>Rekuperační jednotka</h4>
+        <p>
+            <button class="btn btn-primary" @onclick="AutomationButtonClick">@AutomationButtonText</button>
+        </p>
+        
+        <h5>Ruční ovládání</h5>
+        <p>
+            <button disabled="@ManualButtonsDisabled" class="btn btn-primary" @onclick="OnPowerButtonClick">@PowerButtonText</button>
+            <button disabled="@ManualButtonsDisabled" class="btn btn-primary" @onclick="OnIntensityButtonClick">@IntensityButtonText</button>
+        </p>
+        
+        <h5>Automatické ovládání</h5>
+        <p>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="OnPauseButtonClick">Pozastavit na 1 hodinu</button>
+            
+            <table>
+                <tbody>
+                <tr>
+                    <td>Napájení</td>
+                    <td>@_viewModel.RecuperationUnitPower</td>
+                </tr>
+                <tr>
+                    <td>Intenzita</td>
+                    <td>@_viewModel.RecuperationUnitIntensity</td>
+                </tr>
+                <tr>
+                    <td>Pozastaveno</td>
+                    <td>@_recuperationUnit.Paused do @_recuperationUnit.PausedUntil.ToString(CultureInfo.CurrentUICulture)</td>
+                </tr>
+                </tbody>
+            </table>
+            
+        </p>
+    </div>
+</div>
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        _viewModel.DataChanged += () => InvokeAsync(StateHasChanged);
+        
+        base.OnInitialized();
+    }
+
+    private string PowerButtonText => "Napájení " + (_viewModel.RecuperationUnitPower ? "zapnuto" : "vypnuto");
+    private string IntensityButtonText => "Výkon " + (_viewModel.RecuperationUnitIntensity ? "nízký" : "vysoký");
+    private string AutomationButtonText => _recuperationUnit.AutomationMode ? "Automatické ovládání" : "Ruční ovládání";
+    
+    private bool ManualButtonsDisabled => _recuperationUnit.AutomationMode;
+    private bool AutomationButtonsDisabled => !ManualButtonsDisabled;
+
+    private void OnPauseButtonClick()
+    {
+        TimeSpan pausePeriod = TimeSpan.FromMinutes(0.2);
+        _recuperationUnit.Pause(pausePeriod);
+    }
+
+    private void OnPowerButtonClick()
+    {
+        _viewModel.RecuperationUnitPower = !_viewModel.RecuperationUnitPower;
+    }
+
+    private void OnIntensityButtonClick()
+    {
+        _viewModel.RecuperationUnitIntensity = !_viewModel.RecuperationUnitIntensity;
+    }
+
+    private void AutomationButtonClick()
+    {
+        _recuperationUnit.AutomationMode = !_recuperationUnit.AutomationMode;
+    }
+}
