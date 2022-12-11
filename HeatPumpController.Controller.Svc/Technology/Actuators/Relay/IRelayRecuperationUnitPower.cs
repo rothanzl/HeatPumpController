@@ -4,11 +4,11 @@ using Microsoft.Extensions.Options;
 
 namespace HeatPumpController.Controller.Svc.Technology.Actuators.Relay;
 
-public interface IRelayRecuperationUnitLow : IRelayHandler{}
+public interface IRelayRecuperationUnitPower : IRelayHandler{}
 
-public class RelayRecuperationUnitLow : RelayHandlerBase, IRelayRecuperationUnitLow
+public class RelayRecuperationUnitPower : RelayHandlerBase, IRelayRecuperationUnitPower
 {
-    public RelayRecuperationUnitLow(IOptions<ControllerConfig> config, GpioController gpioController) : 
+    public RelayRecuperationUnitPower(IOptions<ControllerConfig> config, GpioController gpioController) : 
         base(GpioConfig.Pins.HandleRecuperationUnitLow, config, gpioController)
     {
     }

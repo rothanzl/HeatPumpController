@@ -18,7 +18,8 @@ public class HdoIndicator : IHdoIndicator
         IsDummy = globalConfig.Value.DummyTechnology;
         _monitoring = new();
         
-        _gpioController.OpenPin(PinNumber, PinMode.InputPullDown);
+        if(!IsDummy)
+            _gpioController.OpenPin(PinNumber, PinMode.InputPullDown);
     }
 
     private int PinNumber { get; } = GpioConfig.Pins.HdoInput;

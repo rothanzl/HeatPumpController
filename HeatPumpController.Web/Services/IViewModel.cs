@@ -192,26 +192,26 @@ public class ViewModel : IViewModel
             DataChanged?.Invoke();
         }
     }
-    public bool RecuperationUnitLowRelay { 
-        get => _stateMediator.Relays.RecuperationUnitLowRelay;
+    public bool RecuperationUnitPower { 
+        get => _stateMediator.Relays.RecuperationUnitPower;
         set
         {
             if (_stateMediator.ProcessState.Automation)
                 return;
 
-            _stateMediator.Relays.RecuperationUnitLowRelay = value;
+            _stateMediator.Relays.RecuperationUnitPower = value;
             Task.Run(() => _stateMediator.PersistIfChange()).Wait();
             DataChanged?.Invoke();
         } 
     }
-    public bool ReserveRelay { 
-        get => _stateMediator.Relays.ReserveRelay;
+    public bool RecuperationUnitIntensity { 
+        get => _stateMediator.Relays.RecuperationUnitIntensity;
         set
         {
             if (_stateMediator.ProcessState.Automation)
                 return;
 
-            _stateMediator.Relays.ReserveRelay = value;
+            _stateMediator.Relays.RecuperationUnitIntensity = value;
             Task.Run(() => _stateMediator.PersistIfChange()).Wait();
             DataChanged?.Invoke();
         } 
@@ -234,8 +234,8 @@ public class ViewModel : IViewModel
         _stateMediator.Relays.HeatingCircuitBedRoomRelay = val;
         _stateMediator.Relays.HeatingCircuitSmallRoomRelay = val;
 
-        _stateMediator.Relays.RecuperationUnitLowRelay = val;
-        _stateMediator.Relays.ReserveRelay = val;
+        _stateMediator.Relays.RecuperationUnitPower = val;
+        _stateMediator.Relays.RecuperationUnitIntensity = val;
 
         await _stateMediator.PersistIfChange();
         DataChanged?.Invoke();

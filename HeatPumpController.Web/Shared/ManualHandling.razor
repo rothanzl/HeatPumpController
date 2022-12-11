@@ -31,6 +31,15 @@
 
 <div class="row">
     <div class="col">
+        <h4>Rekuperační jednotka</h4>
+        <RelayButton ParameterName="@nameof(ViewModel.RecuperationUnitPower)" ButtonTextPrefixOverride="Napájení" ButtonTextStateSetOverride="zapnuto" ButtonTextStateResetOverride="vypnuto"/>
+        <RelayButton ParameterName="@nameof(ViewModel.RecuperationUnitIntensity)" ButtonTextPrefixOverride="Intenzita" ButtonTextStateSetOverride="nízká" ButtonTextStateResetOverride="vysoká"/>
+        
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
         <h4>Controll heating</h4>
         <RelayButton ParameterName="@nameof(ViewModel.HeatPumpRelay)"/>
         <RelayButton ParameterName="@nameof(ViewModel.UpperValveRelay)"/>
@@ -48,8 +57,6 @@
         <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitLivingRoomRelay)"/>
         <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBedRoomRelay)"/>
         <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitSmallRoomRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.RecuperationUnitLowRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.ReserveRelay)"/>
     </div>
 </div>
 

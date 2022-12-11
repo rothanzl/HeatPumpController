@@ -21,7 +21,8 @@ public abstract class RelayHandlerBase : IRelayHandler
         _gpioController = gpioController;
         DummyTechnology = config.Value.DummyTechnology;
         
-        _gpioController.OpenPin(PinNumber, PinMode.Output);
+        if(!DummyTechnology)
+            _gpioController.OpenPin(PinNumber, PinMode.Output);
     }
     
     

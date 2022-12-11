@@ -28,8 +28,8 @@ public static class ServiceDiRegister
         services.AddSingleton<IRelayHeatingCircuitKitchen, RelayHeatingCircuitKitchen>();
         services.AddSingleton<IRelayHeatingCircuitLivingRoom, RelayHeatingCircuitLivingRoom>();
         services.AddSingleton<IRelayExtraHeating, RelayExtraHeating>();
-        services.AddSingleton<IRelayReserve, RelayReserve>();
-        services.AddSingleton<IRelayRecuperationUnitLow, RelayRecuperationUnitLow>();
+        services.AddSingleton<IRelayRecuperationUnitIntensity, RelayRecuperationUnitIntensity>();
+        services.AddSingleton<IRelayRecuperationUnitPower, RelayRecuperationUnitPower>();
         services.AddSingleton<ITechnologyService, TechnologyService>();
         services.AddSingleton<IMqttTemperatureSensorsHelper, MqttTemperatureSensorsHelper>();
         services.AddSingleton<ITemperaturesFacade, TemperaturesFacade>();   
