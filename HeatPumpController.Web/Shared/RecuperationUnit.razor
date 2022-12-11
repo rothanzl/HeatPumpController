@@ -18,8 +18,13 @@
         
         <h5>Automatické ovládání</h5>
         <p>
-            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="OnPauseButtonClick">Pozastavit na 1 hodinu</button>
-            
+            <h6>Pozastavit</h6>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="() => OnPauseButtonClick(10)">10 minut</button>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="() => OnPauseButtonClick(20)">20 minut</button>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="() => OnPauseButtonClick(30)">30 minut</button>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="() => OnPauseButtonClick(60)">60 minut</button>
+            <button disabled="@AutomationButtonsDisabled" class="btn btn-danger" @onclick="() => OnPauseButtonClick(0)">Reset</button>
+
             <table>
                 <tbody>
                 <tr>
@@ -36,7 +41,7 @@
                 </tr>
                 </tbody>
             </table>
-            
+
         </p>
     </div>
 </div>
@@ -51,16 +56,15 @@
     }
 
     private string PowerButtonText => "Napájení " + (_viewModel.RecuperationUnitPower ? "zapnuto" : "vypnuto");
-    private string IntensityButtonText => "Výkon " + (_viewModel.RecuperationUnitIntensity ? "nízký" : "vysoký");
+    private string IntensityButtonText => "Výkon " + (_viewModel.RecuperationUnitIntensity ? "vysoký" : "nízký");
     private string AutomationButtonText => _recuperationUnit.AutomationMode ? "Automatické ovládání" : "Ruční ovládání";
     
     private bool ManualButtonsDisabled => _recuperationUnit.AutomationMode;
     private bool AutomationButtonsDisabled => !ManualButtonsDisabled;
 
-    private void OnPauseButtonClick()
+    private void OnPauseButtonClick(int minutes)
     {
-        TimeSpan pausePeriod = TimeSpan.FromMinutes(0.2);
-        _recuperationUnit.Pause(pausePeriod);
+        _recuperationUnit.Pause(TimeSpan.FromMinutes(minutes));
     }
 
     private void OnPowerButtonClick()
