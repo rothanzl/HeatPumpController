@@ -12,4 +12,6 @@ public class RelayExtraHeating : RelayHandlerBase, IRelayExtraHeating
         base(GpioConfig.Pins.HandleExtraHeating, config, gpioController)
     {
     }
+
+    protected override void SetMonitoring(bool value) => RelayMonitoring.ExtraHeating.Set(value);
 }

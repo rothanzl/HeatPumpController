@@ -15,4 +15,6 @@ public class RelayHeatingCircuitBathRoom : RelayHandlerBase, IRelayHeatingCircui
         base(GpioConfig.Pins.HandleHeatingCircuitBathRoom, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.HeatingCircuitBathRoom.Set(value);
 }

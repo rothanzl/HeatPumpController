@@ -12,4 +12,7 @@ public class RelayLowerValve : RelayHandlerBase, IRelayLowerValve
         base(GpioConfig.Pins.HandleLowerValve, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.LowerValve.Set(value);
+
 }

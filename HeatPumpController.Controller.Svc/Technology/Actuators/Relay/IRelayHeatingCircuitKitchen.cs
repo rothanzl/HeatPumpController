@@ -15,4 +15,7 @@ public class RelayHeatingCircuitKitchen : RelayHandlerBase, IRelayHeatingCircuit
         base(GpioConfig.Pins.HandleHeatingCircuitKitchen, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.HeatingCircuitKitchen.Set(value);
+
 }

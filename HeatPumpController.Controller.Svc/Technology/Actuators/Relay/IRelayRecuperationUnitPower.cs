@@ -12,4 +12,7 @@ public class RelayRecuperationUnitPower : RelayHandlerBase, IRelayRecuperationUn
         base(GpioConfig.Pins.HandleRecuperationUnitLow, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.RecuperationUnitPower.Set(value);
+
 }

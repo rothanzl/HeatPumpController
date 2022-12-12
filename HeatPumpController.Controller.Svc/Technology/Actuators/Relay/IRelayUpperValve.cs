@@ -12,4 +12,7 @@ public class RelayUpperValve : RelayHandlerBase, IRelayUpperValve
         base(GpioConfig.Pins.HandleUpperValve, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.UpperValve.Set(value);
+
 }

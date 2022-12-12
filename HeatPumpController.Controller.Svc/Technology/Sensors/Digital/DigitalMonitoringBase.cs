@@ -2,7 +2,14 @@ using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature;
 
 namespace HeatPumpController.Controller.Svc.Technology.Sensors.Digital;
 
-public abstract class DigitalMonitoringBase
+public interface IDigitalMonitoring
+{
+    void Set(DigitalSensorValue value);
+    void Set(bool value);
+
+}
+
+public abstract class DigitalMonitoringBase : IDigitalMonitoring
 {
     private const string Name = "digital_signal";
     private const string DeviceTypeLabel = TemperatureMonitoringBase.Label;
@@ -51,6 +58,11 @@ public abstract class DigitalMonitoringBase
     {
         Infrastructure.Monitoring.SetGaugeValue(Name, ValueLabels, Convert.ToDouble(value.Value));
         Infrastructure.Monitoring.SetGaugeValue(Name, ValidLabels, Convert.ToDouble(value.Valid));
+    }
+
+    public void Set(bool value)
+    {
+        Infrastructure.Monitoring.SetGaugeValue(Name, ValueLabels, Convert.ToDouble(value));
     }
 
     

@@ -12,4 +12,7 @@ public class RelayHeatPump : RelayHandlerBase, IRelayHeatPump
         base(GpioConfig.Pins.HandleHeatPump, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.HeatPump.Set(value);
+
 }

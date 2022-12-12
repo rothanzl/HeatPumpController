@@ -15,4 +15,7 @@ public class RelayRecuperationUnitIntensity : RelayHandlerBase, IRelayRecuperati
         base(GpioConfig.Pins.Reserve, config, gpioController)
     {
     }
+    
+    protected override void SetMonitoring(bool value) => RelayMonitoring.RecuperationUnitIntensity.Set(value);
+
 }

@@ -31,9 +31,11 @@ public abstract class RelayHandlerBase : IRelayHandler
         if (DummyTechnology) return;
         
         PinValue value = set ? PinValue.Low : PinValue.High;
-        
-        
         _gpioController.Write(pinNumber: PinNumber, value);
+        
+        SetMonitoring(set);
     }
+
+    protected abstract void SetMonitoring(bool value);
 
 }
