@@ -51,6 +51,7 @@
                 <th scope="col">Room</th>
                 <th scope="col">Temperature</th>
                 <th scope="col">Control</th>
+                <th scope="col">SP</th>
                 <th scope="col">Valid sensor signal</th>
             </tr>
             </thead>
@@ -62,30 +63,35 @@
                     <RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBathRoomRelay)"/>
                     <RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBathRoomWallRelay)"/>
                 </td>
+                <td>@RoomTemperaturesSetPoints.BathRoom.ToString("F1") °C</td>
                 <td>@_RoomTemperatures.LivingRoom.Valid</td>
             </tr>
             <tr>
                 <th scope="row">Kitchen</th>
                 <td>@_RoomTemperatures.Kitchen.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitKitchenRelay)"/></td>
+                <td>@RoomTemperaturesSetPoints.Kitchen.ToString("F1") °C</td>
                 <td>@_RoomTemperatures.Kitchen.Valid</td>
             </tr>
             <tr>
                 <th scope="row">Living room</th>
                 <td>@_RoomTemperatures.LivingRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitLivingRoomRelay)"/></td>
+                <td>@RoomTemperaturesSetPoints.LivingRoom.ToString("F1") °C</td>
                 <td>@_RoomTemperatures.LivingRoom.Valid</td>
             </tr>
             <tr>
                 <th scope="row">Bed room</th>
                 <td>@_RoomTemperatures.BedRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBedRoomRelay)"/></td>
+                <td>@RoomTemperaturesSetPoints.BedRoom.ToString("F1") °C</td>
                 <td>@_RoomTemperatures.BedRoom.Valid</td>
             </tr>
             <tr>
                 <th scope="row">Small room</th>
                 <td>@_RoomTemperatures.SmallRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitSmallRoomRelay)"/></td>
+                <td>@RoomTemperaturesSetPoints.SmallRoom.ToString("F1") °C</td>
                 <td>@_RoomTemperatures.SmallRoom.Valid</td>
             </tr>
             </tbody>
