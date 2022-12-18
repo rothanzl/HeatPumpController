@@ -25,24 +25,29 @@
             <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="() => OnPauseButtonClick(60)">60 minut</button>
             <button disabled="@AutomationButtonsDisabled" class="btn btn-danger" @onclick="() => OnPauseButtonClick(0)">Reset</button>
 
-            <table>
-                <tbody>
-                <tr>
-                    <td>Napájení</td>
-                    <td>@_viewModel.RecuperationUnitPower</td>
-                </tr>
-                <tr>
-                    <td>Intenzita</td>
-                    <td>@_viewModel.RecuperationUnitIntensity</td>
-                </tr>
-                <tr>
-                    <td>Pozastaveno</td>
-                    <td>@_recuperationUnit.Paused do @_recuperationUnit.PausedUntil.ToString(CultureInfo.CurrentUICulture)</td>
-                </tr>
-                </tbody>
-            </table>
-
         </p>
+        
+        <h6>Cykolování</h6>
+        <p>@CyclingText</p>
+        <button disabled="@AutomationButtonsDisabled" class="btn btn-primary" @onclick="CycleButtonOnClick">@CycleButtonText</button>
+        
+        <table>
+            <tbody>
+            <tr>
+                <td>Napájení</td>
+                <td>@_viewModel.RecuperationUnitPower</td>
+            </tr>
+            <tr>
+                <td>Intenzita</td>
+                <td>@_viewModel.RecuperationUnitIntensity</td>
+            </tr>
+            <tr>
+                <td>Pozastaveno</td>
+                <td>@_recuperationUnit.Paused do @_recuperationUnit.PausedUntil.ToString(CultureInfo.CurrentUICulture)</td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 </div>
 
@@ -53,6 +58,20 @@
         _viewModel.DataChanged += () => InvokeAsync(StateHasChanged);
         
         base.OnInitialized();
+    }
+
+    private string CycleButtonText => _recuperationUnit.Cycling.Enabled ? "Vypnout" : "Zapnout";
+
+    private string CyclingText => "Cyklování " +
+                                  (_recuperationUnit.Cycling.Enabled ? "povoleno" : "zakázáno") +
+                                  " s intervalem " +
+                                  _recuperationUnit.Cycling.Interval.ToString(null, CultureInfo.InstalledUICulture) +
+                                  ". Konce cyklu v " +
+                                  _recuperationUnit.Cycling.CycleChange.ToString(CultureInfo.CurrentUICulture);
+
+    private void CycleButtonOnClick()
+    {
+        _recuperationUnit.Cycling.Enabled = !_recuperationUnit.Cycling.Enabled;
     }
 
     private string PowerButtonText => "Napájení " + (_viewModel.RecuperationUnitPower ? "zapnuto" : "vypnuto");

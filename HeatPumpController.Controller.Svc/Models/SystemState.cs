@@ -9,16 +9,32 @@ public class SystemState
     public SetPointTemperatures SetPointTemperatures { get; set; } = new (40, 24);
     public RelayState RelayState { get; init; } = new();
     public ProcessState ProcessState { get; init; } = new();
-    public RecuperationUnit RecuperationUnit { get; init; } = new();
+    public RecuperationUnitState RecuperationUnit { get; init; } = new();
 
 }
 
-public class RecuperationUnit
+public class RecuperationUnitState
 {
     public bool AutomationMode { get; set; } = false;
 
     public bool Paused { get; set; } = false;
     public DateTime PausedUntil { get; set; } = default;
+
+    public RecuperationUnitCyclingState Cycling { get; init; } = new();
+}
+
+public interface IRecuperationUnitCycling
+{
+    bool Enabled { get; }
+    DateTime CycleChange { get; }
+    TimeSpan Interval { get; }
+}
+
+public class RecuperationUnitCyclingState : IRecuperationUnitCycling
+{
+    public bool Enabled { get; set; } = false;
+    public DateTime CycleChange { get; set; }
+    public TimeSpan Interval { get; set; } = TimeSpan.FromMinutes(30);
 }
 
 public interface IRelayState

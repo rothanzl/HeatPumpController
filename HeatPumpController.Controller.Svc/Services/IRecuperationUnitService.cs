@@ -13,7 +13,9 @@ public class RecuperationUnitService : IRecuperationUnitService
 {
     private readonly IPersistentContext<SystemState> _persistent;
     private readonly IHdoIndicator _hdo;
-    private RecuperationUnit State => _persistent.State.RecuperationUnit;
+    private RecuperationUnitState State => _persistent.State.RecuperationUnit;
+    
+    private DateTime CyclingLastChange { get; set; }
 
     public RecuperationUnitService(IPersistentContext<SystemState> persistent, IHdoIndicator hdo)
     {
@@ -51,6 +53,24 @@ public class RecuperationUnitService : IRecuperationUnitService
             _persistent.State.RelayState.RecuperationUnitPower = false;
             return _persistent.WriteIfChangeAsync();
         }
+        
+        
+        // Cycling
+        if (State.Cycling.Enabled)
+        {
+            var now = DateTime.Now;
+
+            if (CyclingLastChange != State.Cycling.CycleChange && now >= State.Cycling.CycleChange)
+            {
+                _persistent.State.RelayState.RecuperationUnitPower = !_persistent.State.RelayState.RecuperationUnitPower;
+                CyclingLastChange = State.Cycling.CycleChange;
+                State.Cycling.CycleChange += State.Cycling.Interval;
+                return _persistent.WriteIfChangeAsync();
+            }
+
+            return Task.CompletedTask;
+        }
+        
         
         _persistent.State.RelayState.RecuperationUnitPower = true;
         return _persistent.WriteIfChangeAsync();

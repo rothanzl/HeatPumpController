@@ -3,21 +3,64 @@ using HeatPumpController.Controller.Svc.Models.Infra;
 
 namespace HeatPumpController.Web.Services;
 
-public interface IRecuperationUnitViewModel
+public interface IRecuperationUnitViewModel 
 {
     bool AutomationMode { get; set; }
     bool Paused { get; }
     DateTime PausedUntil { get; }
     void Pause(TimeSpan pauseDelay);
+    
+    RecuperationUnitCyclingViewModel Cycling { get; }
 }
+
+public class RecuperationUnitCyclingViewModel : IRecuperationUnitCycling
+{
+    private readonly IPersistentContext<SystemState> _persistent;
+    private RecuperationUnitCyclingState State => _persistent.State.RecuperationUnit.Cycling;
+
+    public RecuperationUnitCyclingViewModel(IPersistentContext<SystemState> persistent)
+    {
+        _persistent = persistent;
+    }
+
+    public bool Enabled
+    {
+        get => State.Enabled;
+        set
+        {
+            if (State.Enabled == false && value) // Turning on
+            {
+                CycleChange = DateTime.Now;
+            }
+            
+            
+            State.Enabled = value;
+        }
+    }
+
+    public DateTime CycleChange 
+    { 
+        get => State.CycleChange; 
+        set => State.CycleChange = value; 
+    }
+
+    public TimeSpan Interval
+    {
+        get => State.Interval;
+        set => State.Interval = value;
+    }
+}
+
 
 public class RecuperationUnitViewModel : IRecuperationUnitViewModel
 {
     private readonly IPersistentContext<SystemState> _persistent;
+    public RecuperationUnitCyclingViewModel Cycling { get; }
 
-    public RecuperationUnitViewModel(IPersistentContext<SystemState> persistent)
+    public RecuperationUnitViewModel(IPersistentContext<SystemState> persistent, RecuperationUnitCyclingViewModel cycling)
     {
         _persistent = persistent;
+        Cycling = cycling;
     }
 
     public bool AutomationMode
