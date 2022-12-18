@@ -15,7 +15,8 @@ public static class ServiceDiRegister
     public static IServiceCollection RegisterControllerSvc(this IServiceCollection services, WebApplicationBuilder builder)
     {
         services.AddSingleton<IPersistentContext<SystemState>>(_ => new PersistentContext<SystemState>(SystemState.Name));
-        
+
+        services.AddSingleton<IRoomTemperatures, RoomTemperatures>();
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
         services.AddSingleton<IRecuperationUnitService, RecuperationUnitService>();
         services.AddSingleton<IPersistentStateMediator, PersistentStateMediator>();

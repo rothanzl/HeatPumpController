@@ -1,5 +1,7 @@
 @using HeatPumpController.Web.Services
-@inject IViewModel ViewModel
+@using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt
+@inject IViewModel _ViewModel
+@inject IRoomTemperatures _RoomTemperatures;
 @implements IDisposable
 
 <h3>@AutomationState mode</h3>
@@ -16,7 +18,7 @@
 <div class="row">
     <div class="col">
         <p>
-            <button @onclick="CloseAllButtonClick" disabled="@ViewModel.Automation">Close All</button>
+            <button @onclick="CloseAllButtonClick" disabled="@_ViewModel.Automation">Close All</button>
         </p>
     </div>
 </div>
@@ -24,7 +26,7 @@
 <div class="row">
     <div class="col">
         <p>
-            <button @onclick="OpenAllButtonClick" disabled="@ViewModel.Automation">Open All</button>
+            <button @onclick="OpenAllButtonClick" disabled="@_ViewModel.Automation">Open All</button>
         </p>
     </div>
 </div>
@@ -32,22 +34,63 @@
 <div class="row">
     <div class="col">
         <h4>Controll heating</h4>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatPumpRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.UpperValveRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.LowerValveRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.ExtraHeatingRelay)"/>
+        <RelayButton ParameterName="@nameof(_ViewModel.HeatPumpRelay)"/>
+        <RelayButton ParameterName="@nameof(_ViewModel.UpperValveRelay)"/>
+        <RelayButton ParameterName="@nameof(_ViewModel.LowerValveRelay)"/>
+        <RelayButton ParameterName="@nameof(_ViewModel.ExtraHeatingRelay)"/>
     </div>
 </div>
 
 <div class="row">
     <div class="col">
         <h4>Controll valves</h4>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBathRoomWallRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBathRoomRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitKitchenRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitLivingRoomRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitBedRoomRelay)"/>
-        <RelayButton ParameterName="@nameof(ViewModel.HeatingCircuitSmallRoomRelay)"/>
+        
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Room</th>
+                <th scope="col">Temperature</th>
+                <th scope="col">Control</th>
+                <th scope="col">Valid sensor signal</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">Bath room</th>
+                <td>@_RoomTemperatures.BathRoom.Value.ToString("F1") °C</td>
+                <td>
+                    <RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBathRoomRelay)"/>
+                    <RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBathRoomWallRelay)"/>
+                </td>
+                <td>@_RoomTemperatures.LivingRoom.Valid</td>
+            </tr>
+            <tr>
+                <th scope="row">Kitchen</th>
+                <td>@_RoomTemperatures.Kitchen.Value.ToString("F1") °C</td>
+                <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitKitchenRelay)"/></td>
+                <td>@_RoomTemperatures.Kitchen.Valid</td>
+            </tr>
+            <tr>
+                <th scope="row">Living room</th>
+                <td>@_RoomTemperatures.LivingRoom.Value.ToString("F1") °C</td>
+                <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitLivingRoomRelay)"/></td>
+                <td>@_RoomTemperatures.LivingRoom.Valid</td>
+            </tr>
+            <tr>
+                <th scope="row">Bed room</th>
+                <td>@_RoomTemperatures.BedRoom.Value.ToString("F1") °C</td>
+                <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBedRoomRelay)"/></td>
+                <td>@_RoomTemperatures.BedRoom.Valid</td>
+            </tr>
+            <tr>
+                <th scope="row">Small room</th>
+                <td>@_RoomTemperatures.SmallRoom.Value.ToString("F1") °C</td>
+                <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitSmallRoomRelay)"/></td>
+                <td>@_RoomTemperatures.SmallRoom.Valid</td>
+            </tr>
+            </tbody>
+        </table>
+        
     </div>
 </div>
 
@@ -55,30 +98,30 @@
 
     protected override void OnInitialized()
     {
-        ViewModel.DataChanged += DataChangedHandler;
+        _ViewModel.DataChanged += DataChangedHandler;
         base.OnInitialized();
     }
 
-    private string AutomationState => ViewModel.Automation ? "Auto" : "Man";
-    private string ModeChangeButtonText => ViewModel.Automation ? "Turn to Manual mode" : "Turn to Automate mode";
+    private string AutomationState => _ViewModel.Automation ? "Auto" : "Man";
+    private string ModeChangeButtonText => _ViewModel.Automation ? "Turn to Manual mode" : "Turn to Automate mode";
 
-    private string ProcessState => ViewModel.ProcessState.ToString();
+    private string ProcessState => _ViewModel.ProcessState.ToString();
     
     private void ModeChangeButtonClick()
     {
-        ViewModel.Automation = !ViewModel.Automation;
+        _ViewModel.Automation = !_ViewModel.Automation;
     }
 
     private void DataChangedHandler() => InvokeAsync(StateHasChanged);
 
     public void Dispose()
     {
-        ViewModel.DataChanged -= DataChangedHandler;
+        _ViewModel.DataChanged -= DataChangedHandler;
 
     }
 
-    private Task CloseAllButtonClick() => ViewModel.SetAllRelays(true);
+    private Task CloseAllButtonClick() => _ViewModel.SetAllRelays(true);
 
-    private Task OpenAllButtonClick() => ViewModel.SetAllRelays(false);
+    private Task OpenAllButtonClick() => _ViewModel.SetAllRelays(false);
 
 }

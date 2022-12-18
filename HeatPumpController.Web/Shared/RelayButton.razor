@@ -3,13 +3,7 @@
 @inject IViewModel ViewModel
 @implements IDisposable
 
-<div class="row">
-    <div class="col">
-        <p>
-            <button class="btn btn-primary" @onclick="OnButtonClick" disabled="@ButtonDisabled">@ButtonText</button>
-        </p>
-    </div>
-</div>
+<button class="btn @ButtonClass" @onclick="OnButtonClick" disabled="@ButtonDisabled">@ButtonText</button>
 
 @code {
 
@@ -21,7 +15,7 @@
 
     [Parameter]
     public string ButtonTextStateSetOverride { get; init; } = "";
-    
+
     [Parameter]
     public string ButtonTextStateResetOverride { get; init; } = "";
 
@@ -29,9 +23,12 @@
     private string ButtonText { get; set; } = "";
 
     private Action OnButtonClick { get; set; } = () => { };
+    private Func<bool> GetValue { get; set; } = () => false;
 
     private bool ButtonDisabled => ViewModel.Automation;
     private PropertyInfo propertyInfo { get; set; }
+
+    private string ButtonClass => GetValue() ? "btn-danger" : "btn-success";
 
     protected override void OnParametersSet()
     {
@@ -43,10 +40,12 @@
 
         var value = (bool)propertyInfo.GetValue(ViewModel)!;
         SetButtonText(value);
+        
+        GetValue = () => (bool)propertyInfo.GetValue(ViewModel)!;
 
         OnButtonClick = () =>
         {
-            var v = !(bool)propertyInfo.GetValue(ViewModel)!;
+            var v = !GetValue();
             propertyInfo.SetValue(ViewModel, v);
             SetButtonText(v);
         };
