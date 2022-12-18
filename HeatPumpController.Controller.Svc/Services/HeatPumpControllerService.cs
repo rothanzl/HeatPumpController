@@ -72,6 +72,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
 {
     private readonly IPersistentStateMediator _stateMediator;
     private readonly IRecuperationUnitService _recuperationUnitService;
+    private readonly IHeatingCircuitsService _heatingCircuitsService;
     private readonly ILogger<ServiceLoopIteration> _logger;
 
     private readonly IRelayHeatingCircuitBathRoom _heatingCircuitBathRoomRelay;
@@ -98,7 +99,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         IRelayLowerValve lowerValveRelay, IRelayUpperValve upperValveRelay, IRelayExtraHeating extraHeatingRelay, 
         ITechnologyService technologyService, IHdoIndicator hdoIndicator, ITemperaturesFacade temperatures, 
         IRelayRecuperationUnitPower recuperationUnitPowerRelay, IRelayRecuperationUnitIntensity recuperationUnitIntensityRelay, 
-        IRecuperationUnitService recuperationUnitService)
+        IRecuperationUnitService recuperationUnitService, IHeatingCircuitsService heatingCircuitsService)
     {
         _stateMediator = stateMediator;
         _logger = logger;
@@ -118,6 +119,7 @@ public class ServiceLoopIteration : IServiceLoopIteration
         _recuperationUnitPowerRelay = recuperationUnitPowerRelay;
         _recuperationUnitIntensityRelay = recuperationUnitIntensityRelay;
         _recuperationUnitService = recuperationUnitService;
+        _heatingCircuitsService = heatingCircuitsService;
     }
 
     
@@ -146,6 +148,8 @@ public class ServiceLoopIteration : IServiceLoopIteration
         try
         {
             await _recuperationUnitService.Act();
+            await _heatingCircuitsService.Act();
+
             
             _heatingCircuitBathRoomRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomRelay);
             _heatingCircuitBathRoomWallRelay.Set(_stateMediator.Relays.HeatingCircuitBathRoomWallRelay);

@@ -8,6 +8,17 @@ public interface IRoomTemperatures
     ISensorValue<float> BedRoom { get; }
     ISensorValue<float> SmallRoom { get; }
     ISensorValue<float> TechRoom { get; }
+
+    
+}
+
+public static class RoomTemperaturesSetPoints
+{
+    public const float BathRoom = 24f;
+    public const float Kitchen = 23f;
+    public const float LivingRoom = 23.5f;
+    public const float BedRoom = 23f;
+    public const float SmallRoom = 23f;
 }
 
 public class RoomTemperatures : IRoomTemperatures

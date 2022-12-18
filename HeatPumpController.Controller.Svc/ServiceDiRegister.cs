@@ -16,6 +16,7 @@ public static class ServiceDiRegister
     {
         services.AddSingleton<IPersistentContext<SystemState>>(_ => new PersistentContext<SystemState>(SystemState.Name));
 
+        services.AddSingleton<IHeatingCircuitsService, HeatingCircuitsService>();
         services.AddSingleton<IRoomTemperatures, RoomTemperatures>();
         services.AddSingleton<IServiceLoopIteration, ServiceLoopIteration>();
         services.AddSingleton<IRecuperationUnitService, RecuperationUnitService>();
