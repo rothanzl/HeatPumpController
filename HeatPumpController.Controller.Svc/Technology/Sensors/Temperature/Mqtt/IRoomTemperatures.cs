@@ -14,11 +14,11 @@ public interface IRoomTemperatures
 
 public static class RoomTemperaturesSetPoints
 {
-    public const float BathRoom = 24f;
+    public const float BathRoom = 23.5f;
     public const float Kitchen = 22.5f;
     public const float LivingRoom = 23.5f;
-    public const float BedRoom = 22f;
-    public const float SmallRoom = 22f;
+    public const float BedRoom = 22.5f;
+    public const float SmallRoom = 22.5f;
 }
 
 public class RoomTemperatures : IRoomTemperatures
