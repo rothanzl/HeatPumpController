@@ -1,5 +1,7 @@
 @using HeatPumpController.Web.Services
 @using HeatPumpController.Controller.Svc.Technology.Sensors.Temperature.Mqtt
+@using HeatPumpController.Controller.Svc.Technology.Sensors
+@using System.Globalization
 @inject IViewModel _ViewModel
 @inject IRoomTemperatures _RoomTemperatures;
 @implements IDisposable
@@ -64,35 +66,51 @@
                     <RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBathRoomWallRelay)"/>
                 </td>
                 <td>@RoomTemperaturesSetPoints.BathRoom.ToString("F1") °C</td>
-                <td>@_RoomTemperatures.LivingRoom.Valid</td>
+                <td>
+                    @_RoomTemperatures.BathRoom.Valid
+                    @_RoomTemperatures.BathRoom.ReadTimeStampElapsed().ToShortString()
+                    
+                </td>
             </tr>
             <tr>
                 <th scope="row">Kitchen</th>
                 <td>@_RoomTemperatures.Kitchen.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitKitchenRelay)"/></td>
                 <td>@RoomTemperaturesSetPoints.Kitchen.ToString("F1") °C</td>
-                <td>@_RoomTemperatures.Kitchen.Valid</td>
+                <td>
+                    @_RoomTemperatures.Kitchen.Valid
+                    @_RoomTemperatures.Kitchen.ReadTimeStampElapsed().ToShortString()
+                </td>
             </tr>
             <tr>
                 <th scope="row">Living room</th>
                 <td>@_RoomTemperatures.LivingRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitLivingRoomRelay)"/></td>
                 <td>@RoomTemperaturesSetPoints.LivingRoom.ToString("F1") °C</td>
-                <td>@_RoomTemperatures.LivingRoom.Valid</td>
+                <td>
+                    @_RoomTemperatures.LivingRoom.Valid
+                    @_RoomTemperatures.LivingRoom.ReadTimeStampElapsed().ToShortString()
+                </td>
             </tr>
             <tr>
                 <th scope="row">Bed room</th>
                 <td>@_RoomTemperatures.BedRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitBedRoomRelay)"/></td>
                 <td>@RoomTemperaturesSetPoints.BedRoom.ToString("F1") °C</td>
-                <td>@_RoomTemperatures.BedRoom.Valid</td>
+                <td>
+                    @_RoomTemperatures.BedRoom.Valid
+                    @_RoomTemperatures.BedRoom.ReadTimeStampElapsed().ToShortString()
+                </td>
             </tr>
             <tr>
                 <th scope="row">Small room</th>
                 <td>@_RoomTemperatures.SmallRoom.Value.ToString("F1") °C</td>
                 <td><RelayButton ParameterName="@nameof(_ViewModel.HeatingCircuitSmallRoomRelay)"/></td>
                 <td>@RoomTemperaturesSetPoints.SmallRoom.ToString("F1") °C</td>
-                <td>@_RoomTemperatures.SmallRoom.Valid</td>
+                <td>
+                    @_RoomTemperatures.SmallRoom.Valid
+                    @_RoomTemperatures.SmallRoom.ReadTimeStampElapsed().ToShortString()
+                </td>
             </tr>
             </tbody>
         </table>

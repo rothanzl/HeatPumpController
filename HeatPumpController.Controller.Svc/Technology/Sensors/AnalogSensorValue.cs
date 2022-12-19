@@ -7,6 +7,14 @@ public interface ISensorValue<TValue>
     DateTime ReadTimeStamp { get; }
 }
 
+public static class SensorValueExtensions
+{
+    public static TimeSpan ReadTimeStampElapsed<T>(this ISensorValue<T> v) 
+        => DateTime.Now - v.ReadTimeStamp;
+
+    public static string ToShortString(this TimeSpan ts) => ts.ToString(@"hh\:mm\:ss");
+}
+
 public record AnalogSensorValue(float Value, bool Valid, DateTime ReadTimeStamp) : ISensorValue<float>
 {
     public static AnalogSensorValue CreateInvalid() => new(default, false, DateTime.Now);
