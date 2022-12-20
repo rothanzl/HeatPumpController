@@ -112,6 +112,16 @@
                     @_RoomTemperatures.SmallRoom.ReadTimeStampElapsed().ToShortString()
                 </td>
             </tr>
+            <tr>
+                <th scope="row">Tech room</th>
+                <td>@_RoomTemperatures.TechRoom.Value.ToString("F1") °C</td>
+                <td></td>
+                <td></td>
+                <td>
+                    @_RoomTemperatures.TechRoom.Valid
+                    @_RoomTemperatures.TechRoom.ReadTimeStampElapsed().ToShortString()
+                </td>
+            </tr>
             </tbody>
         </table>
         
