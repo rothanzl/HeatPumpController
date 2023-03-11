@@ -90,9 +90,16 @@ public class MqttService : IHostedService, IDisposable
             .WithTopicFilter(
                 f => SetMqttTopicFilterBuilder(f, MqttTopics.TempTechRoom))
             .Build();
-        
-        await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-        var response = await _mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
+
+        try
+        {
+            await _mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+            var response = await _mqttClient.SubscribeAsync(mqttSubscribeOptions, CancellationToken.None);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unable to connect to Mqtt");
+        }
     }
 
     private Task MqttClientOnApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
