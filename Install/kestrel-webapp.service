@@ -2,8 +2,8 @@
 Description=Heat Pump controller
 
 [Service]
-WorkingDirectory=/media/pi/USB1/HeatPumpController/bin
-ExecStart=/home/pi/.dotnet/dotnet /media/pi/USB1/HeatPumpController/bin/HeatPumpController.Web.dll
+WorkingDirectory=/media/pi/USB12/HeatPumpController/bin
+ExecStart=/home/pi/.dotnet/dotnet /media/pi/USB12/HeatPumpController/bin/HeatPumpController.Web.dll
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10
