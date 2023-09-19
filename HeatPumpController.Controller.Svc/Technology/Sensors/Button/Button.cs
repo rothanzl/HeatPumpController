@@ -29,13 +29,13 @@ public class BathRoomButton : Button
         {
             if (msg.Action == ButtonAction.Single)
             {
-                _persistentStateMediator.Relays.RecuperationUnitPower =
-                    !_persistentStateMediator.Relays.RecuperationUnitPower;
-            }
-            else if (msg.Action == ButtonAction.Double)
-            {
                 _persistentStateMediator.Relays.RecuperationUnitIntensity =
                     !_persistentStateMediator.Relays.RecuperationUnitIntensity;
+            }
+            else if (msg.Action is ButtonAction.Double or ButtonAction.Long)
+            {
+                _persistentStateMediator.Relays.RecuperationUnitPower =
+                    !_persistentStateMediator.Relays.RecuperationUnitPower;
             }
 
             return new ValueTask(_persistentStateMediator.PersistIfChange());
