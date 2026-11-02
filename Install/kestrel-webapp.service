@@ -1,9 +1,10 @@
 [Unit]
 Description=Heat Pump controller
+RequiresMountsFor=/mnt/usb
 
 [Service]
-WorkingDirectory=/media/pi/USB12/HeatPumpController/bin
-ExecStart=/home/pi/.dotnet/dotnet /media/pi/USB12/HeatPumpController/bin/HeatPumpController.Web.dll
+WorkingDirectory=/mnt/usb/HeatPumpController/bin
+ExecStart=/home/pi/.dotnet/dotnet /mnt/usb/HeatPumpController/bin/HeatPumpController.Web.dll
 Restart=always
 # Restart service after 10 seconds if the dotnet service crashes:
 RestartSec=10

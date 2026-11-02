@@ -8,7 +8,7 @@ ASP.NET Core web application controlling a heat pump, deployed on a Raspberry Pi
 |------|-------|
 | Address | `192.168.1.54` |
 | User | `pi` |
-| App directory | `/media/pi/USB12/HeatPumpController/bin` |
+| App directory | `/mnt/usb/HeatPumpController/bin` (USB stick, see below) |
 | .NET runtime | `/home/pi/.dotnet/dotnet` |
 | Web app port | `5000` (proxied by nginx on port `80`) |
 | Prometheus | port `9090`, data in `/media/pi/USB1/prometheus-data` |
@@ -21,6 +21,18 @@ ssh pi@192.168.1.54
 ```
 
 Login uses the `pi` user's password. The Pi is reachable only from the local network.
+
+### USB stick mount
+
+The repository and build output live on a USB stick (label `USB1`, `UUID=F6E7-DC7F`). It is mounted at a fixed
+path via `/etc/fstab`, and the service declares `RequiresMountsFor=/mnt/usb` so it waits for the mount:
+
+```
+UUID=F6E7-DC7F  /mnt/usb  vfat  defaults,nofail,uid=1000,gid=1000,fmask=0022,dmask=0022,x-systemd.device-timeout=15s  0  0
+```
+
+Do not rely on the desktop auto-mount under `/media/pi/USB*` – it picks a new folder name (`USB1`, `USB11`, `USB12`, …)
+whenever the stick is remounted, which previously left the service crash-looping on a stale path.
 
 ### Manage the service
 
@@ -39,7 +51,7 @@ The repository is cloned directly on the Pi. To deploy, SSH in and run the publi
 
 ```bash
 ssh pi@192.168.1.54
-cd /media/pi/USB12/HeatPumpController
+cd /mnt/usb/HeatPumpController
 ./publish-and-run.sh
 ```
 
